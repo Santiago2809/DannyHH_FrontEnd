@@ -1,0 +1,15 @@
+.rbc-off-range-bg {
+    background-color: rgb( 123, 127, 144 );
+}
+.rbc-button-link {
+    color: #fff;
+}
+.rbc-today {
+    background-color: #399E5A;
+}
+.rbc-toolbar button {
+    color: #fff ;
+}
+.rbc-active {
+    color: #000 !important;
+}

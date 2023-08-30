@@ -1,0 +1,12 @@
+.logincard {
+    background-color: #3b4853;
+    max-width: 320px;
+    /* padding: 20px; */
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.username, .pswd {
+    color: #fff;
+}

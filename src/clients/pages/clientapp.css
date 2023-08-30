@@ -1,0 +1,13 @@
+.tableNames > th {
+    font-size: 20px;
+    border: 1px solid #fff;
+}
+.tableElement {
+    border: 1px solid #fff;
+}
+.controlBtn {
+    margin-right: 8px !important;
+}
+.controlBtn:last-child {
+    margin-right: 0 !important;
+}
