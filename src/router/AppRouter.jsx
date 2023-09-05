@@ -1,4 +1,3 @@
-import React from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Login } from '../auth/index';
 import { CalendarApp } from '../calendar/index';

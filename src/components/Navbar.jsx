@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { onLogOut } from '../store';
@@ -16,10 +16,11 @@ export const Navbar = () => {
         }
         const auth = JSON.parse(localStorage.getItem('auth'));
         if( !auth ) navigate("/auth")
-    },[isAuth]);
+    },[isAuth, navigate, location.pathname]);
 
     const onLogout = () => {
         localStorage.setItem('auth', false);
+        localStorage.removeItem('customers')
         dispatch(onLogOut());
         navigate("/auth")
     }

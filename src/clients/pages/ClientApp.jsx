@@ -1,9 +1,7 @@
-import { useEffect } from 'react'
 import { AddModalClient, EditModalClient, DeleteModalClient } from '../index';
 import './clientapp.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { onOpenAddC, onOpenDelC, onOpenEditC } from '../../store';
-import { getDbClients } from '../helpers/getDBClients';
 
 const headers = ["Name", "Phone", "Address", "Location", "Frecuency", "Time", "Day of Week", "No. of Week", "Category", "Price"]
 
@@ -11,16 +9,6 @@ export const ClientApp = () => {
 
     const clients = useSelector(store => store.clients.clients);
     const dispatch = useDispatch();
-
-    // const [clientsLocaleStorage, setClients] = useState(
-    //     (JSON.parse(localStorage.getItem('clients')) == null) ? [] : JSON.parse(localStorage.getItem('clients'))
-    // );
-
-
-    useEffect(() => {
-        // console.log("rendering client screen")
-        getDbClients();
-    }, [])
 
     const onAddOpen = () => {
         dispatch(onOpenAddC());
@@ -31,7 +19,6 @@ export const ClientApp = () => {
     const onEditOpen = () => {
         dispatch(onOpenEditC());
     };
-
 
     return (
         <div className='p-4'>
@@ -61,16 +48,18 @@ export const ClientApp = () => {
                     <tbody style={{ "color": "#fff" }}>
                         {
                             clients?.map(client => {
+                                const frequency = client.frequency != null ? client.frequency : "Not Available";
+                                const no_week = client.no_week != null ? client.no_week : "Not Available";
                                 return (
                                     <tr key={client.id}>
                                         <td className='tableElement p-2'>{client.name}</td>
                                         <td className='tableElement p-2'>{client.phone}</td>
                                         <td className='tableElement p-2'>{client.address}</td>
                                         <td className='tableElement p-2'>{client.locality}</td>
-                                        <td className='tableElement p-2'>{client.frecuency}</td>
-                                        <td className='tableElement p-2'>{client.finalHour}</td>
+                                        <td className='tableElement p-2'>{frequency}</td>
+                                        <td className='tableElement p-2'>{client.hour}</td>
                                         <td className='tableElement p-2'>{client.dweek}</td>
-                                        <td className='tableElement p-2'>{client.noWeek}</td>
+                                        <td className='tableElement p-2'>{no_week}</td>
                                         <td className='tableElement p-2'>{client.category}</td>
                                         <td className='tableElement p-2'>{client.price}</td>
                                     </tr>

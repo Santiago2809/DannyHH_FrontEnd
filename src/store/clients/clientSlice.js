@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { getClients } from '../../clients';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const clientsSlice = createSlice({
     name: 'clients',
@@ -7,8 +6,8 @@ export const clientsSlice = createSlice({
         clients: [], 
     },
     reducers: {
-        fetchClients: ( state ) => {
-            state.clients = getClients() == null ? [] : getClients();
+        setClients: ( state, { payload } ) => {
+            state.clients = payload;
         },
         addClients: ( state, { payload }) => {
             state.clients.push(payload);
@@ -20,4 +19,4 @@ export const clientsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { fetchClients, addClients,delClients } = clientsSlice.actions;
+export const { setClients , addClients,delClients } = clientsSlice.actions;

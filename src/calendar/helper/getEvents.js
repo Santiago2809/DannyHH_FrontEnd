@@ -1,8 +1,8 @@
-import { addDays, addHours, addMonths } from "date-fns";
+import { addDays, addHours } from "date-fns";
 
 
 export const getEvents = () => {
-	const clients = JSON.parse(localStorage.getItem('clients'))?.map( client => {
+	const clients = JSON.parse(localStorage.getItem('customer'))?.map( client => {
 		return {
 			name: client.name, 
 			phone: client.phone,
@@ -27,7 +27,7 @@ export const getEvents = () => {
 		const clientDate = new Date(client.date);
 		let firstClientDay = new Date(clientDate.setDate(1));
 		// console.log('-------------------');
-		while(true){
+		while(true){ //TODO: cambia el valor del while a true 
 			if(firstClientDay.getDay() != clientDay){
 				firstClientDay = addDays(firstClientDay,1);
 			} else {
@@ -65,6 +65,7 @@ export const getEvents = () => {
 							break;
 						case 'twoWeeks':
 							newEvent = addDays(newEvent, 14);
+							break;
 						default:
 							break;
 					}
@@ -73,7 +74,6 @@ export const getEvents = () => {
 						end: addHours( newEvent, 1),
 						address: client.address,
 						location: client.location,
-						location: client.location, 
 						customer:{
 							name: `${client.name}`,
 							id: client.id,

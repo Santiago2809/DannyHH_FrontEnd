@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Navbar } from '../components'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchClients } from '../store'
+import { setClients } from '../store'
+import { getDbClients } from '../clients/helpers/getDBClients'
 
 export const HomePage = () => {
 
@@ -14,11 +15,15 @@ export const HomePage = () => {
     useEffect(() => {
         const auth = JSON.parse(localStorage.getItem('auth'));
         if (!auth) navigate("/auth")
-    }, [isAuth])
+    }, [isAuth, navigate])
 
     useEffect(() => {
-        dispatch(fetchClients());
-    }, [])
+        getDbClients().then(customers => {
+            dispatch(setClients(customers))
+            localStorage.setItem('customers', JSON.stringify(customers))
+        });
+        console.log("render")
+    }, [dispatch])
 
     return (
         <div>

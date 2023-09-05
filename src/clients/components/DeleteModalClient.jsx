@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal';
-import { getClients } from '../helpers/getClients';
 import { useForm } from '../../hooks/useForm';
 import { delClient } from '../helpers/delClient';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { delClients, fetchClients, onCloseDelC } from '../../store';
+import { delClients, onCloseDelC } from '../../store';
 import { customStyles } from '../../helpers';
+import { getDbClients } from '../helpers/getDBClients';
 
 export const DeleteModalClient = () => {
 
@@ -45,8 +44,8 @@ export const DeleteModalClient = () => {
         const clientid = value.client != ''  ? value.client*1 : clients[0].id;
         delClient( clientid );
         dispatch( delClients( clientid ));
-        dispatch( fetchClients());
-        dispatch(onCloseDel());
+        dispatch( getDbClients());
+        dispatch(onCloseDelC());
         delCorrectly();
     }
 
