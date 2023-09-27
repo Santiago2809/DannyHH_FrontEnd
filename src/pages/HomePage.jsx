@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setClients } from '../store'
 import { getDbClients } from '../clients/helpers/getDBClients'
+import { useLayoutEffect } from 'react'
 
 export const HomePage = () => {
 
@@ -17,12 +18,11 @@ export const HomePage = () => {
         if (!auth) navigate("/auth")
     }, [isAuth, navigate])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         getDbClients().then(customers => {
             dispatch(setClients(customers))
-            localStorage.setItem('customers', JSON.stringify(customers))
+            // localStorage.setItem('customers', JSON.stringify(customers))
         });
-        console.log("render")
     }, [dispatch])
 
     return (

@@ -1,17 +1,22 @@
-import { add, addHours, compareAsc, format, isAfter, isValid } from 'date-fns';
-import React, { useState } from 'react'
+import { addHours,isAfter, isValid } from 'date-fns';
+import { useState } from 'react'
 import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from 'react-modal';
 import { customStyles } from '../../helpers';
 import '../../index.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { onAddCloseCal } from '../../store';
 
 
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-    const [isOpen, setIsOpen] = useState(false);
+    const isOpen = useSelector( state => state.ui.isAddOpenCal );
+    const dispatch = useDispatch();
+
+    // const [isOpen, setIsOpen] = useState(false);
     const [formValues, setFormValues] = useState({
         title: "Santiago",
         notes: "Cecena",
@@ -23,7 +28,7 @@ export const CalendarModal = () => {
     const [showNumber, setShowNumber] = useState(false);
 
     const onCloseModal = () => {
-        setIsOpen(false);
+        dispatch( onAddCloseCal() );
     };
 
     //Funcion que guarda los campos del formulario

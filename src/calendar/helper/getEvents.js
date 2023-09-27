@@ -1,104 +1,91 @@
-import { addDays, addHours } from "date-fns";
+import { addDays, addHours, addMonths, addWeeks } from "date-fns";
 
 
-export const getEvents = () => {
-	const clients = JSON.parse(localStorage.getItem('customer'))?.map( client => {
-		return {
-			name: client.name, 
-			phone: client.phone,
-			address: client.address,
-			location: client.locality,
-			frecuency: client.frecuency,
-			finalHour: client.finalHour,
-			dweek: client.dweek,
-			noWeek: client.noWeek,
-			price: client.price,
-			date: client.date,
-			id: client.id
-		}
-	})
-
-	const events = clients?.map( client => {
-		let dates =  [];
-		const daysWeek = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-		const clientDay = daysWeek.indexOf(client.dweek);
-		// console.log(daysWeek[clientDay]);
-
-		const clientDate = new Date(client.date);
-		let firstClientDay = new Date(clientDate.setDate(1));
-		// console.log('-------------------');
-		while(true){ //TODO: cambia el valor del while a true 
-			if(firstClientDay.getDay() != clientDay){
-				firstClientDay = addDays(firstClientDay,1);
-			} else {
-				break;
-			}
-		}
-		let eventStartDate = new Date(firstClientDay.setHours(client.finalHour.slice(0,client.finalHour.indexOf(":"))));
-		eventStartDate = new Date(eventStartDate.setMinutes(client.finalHour.slice(client.finalHour.indexOf(":")+1)));
+export const getEvents = (customers) => {
+	// const customers = JSON.parse(localStorage.getItem('customers'));
+	
+	const events = customers?.map(customer => {
+		let dates = [];
 		
-		if(client.noWeek*1 > 1){
-			const daysToAdd = (7 * (client.noWeek*1 - 1) );
-			eventStartDate = addDays(eventStartDate,daysToAdd)
-		}
-
-		if( client.frecuency != "once") {
-			let newEvent = eventStartDate;
-			for(let i = 0; i < 30; i++) {
-				if(i == 0){
-					dates.push({
-						start: eventStartDate,
-						end: addHours( eventStartDate, 1),
-						address: client.address,
-						location: client.location,
-						customer:{
-							name: `${client.name}`,
-							id: client.id,
-							phone: client.phone
-						},
-						price: client.price
-					})
-				} else {
-					switch (client.frecuency) {
-						case 'monthly':
-							newEvent = addDays(newEvent, 28);
-							break;
-						case 'twoWeeks':
-							newEvent = addDays(newEvent, 14);
-							break;
-						default:
-							break;
-					}
-					dates.push({
-						start: newEvent,
-						end: addHours( newEvent, 1),
-						address: client.address,
-						location: client.location,
-						customer:{
-							name: `${client.name}`,
-							id: client.id,
-							phone: client.phone
-						},
-						price: client.price
-					})
-				}
-			}
+		const daysWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+		const { id, name, phone, address, locality, frequency, hour, dweek, price, created, } = customer;
+		
+		const numbers = created.split('-');
+		const customerDate = new Date(numbers[0], numbers[1]-1, numbers[2] );
+		let firstDate;
+		
+		if(customerDate.getDay() == daysWeek.indexOf(dweek)){
+			firstDate = addDays(customerDate, 7);
+		} else if (customerDate.getDay() < daysWeek.indexOf(dweek)){
+			firstDate = addDays(customerDate,  7 + (daysWeek.indexOf(dweek) - customerDate.getDay()))
 		} else {
-			dates.push({
-				start: eventStartDate,
-				end: addHours( eventStartDate, 1),
-				address: client.address,
-				customer:{
-					name: `${client.name}`,
-					id: client.id,
-					phone: client.phone
-				},
-				price: client.price
-			})
+			firstDate = addDays(customerDate,  7 - (customerDate.getDay() - daysWeek.indexOf(dweek)))
 		}
-		
+		const event_hour = +hour.slice(0, hour.indexOf(':'))
+		const event_minute = +hour.slice(hour.indexOf(':')+1)
+		firstDate.setHours(event_hour, event_minute );
+
+		dates.push({
+			id,
+			title: name,
+			start: firstDate,
+			end: addHours(firstDate, 2),
+			phone,
+			address,
+			locality,
+			price
+		})
+		for(let i = 0; i <= 50; i++){
+			switch (frequency){
+				case 'monthly':{
+					const start_date = addMonths(dates.at(-1)?.start,1);
+					dates.push({
+						id,
+						title: name,
+						start: start_date,
+						end: addHours(start_date, 2),
+						phone,
+						address,
+						locality,
+						price
+					})
+					break;
+				}
+				case 'every_two_weeks':{
+					const start_date = addWeeks(dates.at(-1)?.start,2);
+					dates.push({
+						id,
+						title: name,
+						start: start_date,
+						end: addHours(start_date, 2),
+						phone,
+						address,
+						locality,
+						price
+					})
+					break;	
+				}
+				case 'every_three_weeks':{
+					const start_date = addWeeks(dates.at(-1)?.start,3);
+					dates.push({
+						id,
+						title: name,
+						start: start_date,
+						end: addHours(start_date, 2),
+						phone,
+						address,
+						locality,
+						price
+					})
+					break
+				}
+				
+				default:
+					console.log('error');
+			}
+		}		
+
 		return dates;
 	})
-	return events;
-	
+	return events
 }

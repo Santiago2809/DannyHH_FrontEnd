@@ -4,10 +4,10 @@ import { Navigate } from 'react-router-dom';
 
 import './calendar.css'
 import { CalendarEvent, CalendarModal, EventModal, getEvents, maxValue, minValue } from '../index';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { localizer } from '../../helpers';
-import { useDispatch } from 'react-redux';
-import { onOpenEvent, setActiveEvent } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { onAddOpenCal, onOpenEvent, setActiveEvent, setEvents } from '../../store';
 
 let events = [];
 
@@ -16,26 +16,28 @@ export const CalendarApp = () => {
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || "month");
     const status = true;
     const dispatch = useDispatch();
+    const customers = useSelector( state => state.clients.clients );
+
     
     useEffect(() => {
-		getEvents()?.forEach( clientDates => {
+        getEvents(customers)?.forEach( clientDates => {
 			clientDates.forEach( event => {
 				events.push(event)
 			})
 		})
+        dispatch(setEvents(events))
 		return () => {
 			events = [];
 		}
-    }, []);
-    
+    }, [customers, dispatch])
 
     if( !status ) {
         return <Navigate to="/auth" />
     }
 
-    const onDubleClick = ( event ) => { 
-        console.log({ doubleClick: event})
-    }
+    // const onDubleClick = ( event ) => { 
+    //     console.log({ doubleClick: event})
+    // }
 
     const onSelect = ( event ) => {
         
@@ -57,6 +59,9 @@ export const CalendarApp = () => {
         setLastView(view != 'agenda' ? view : 'month');
     }
 	
+    const onAddOpen = () => {
+        dispatch(onAddOpenCal())
+    }
 
     return (
         <div>
@@ -70,7 +75,7 @@ export const CalendarApp = () => {
                 components={{
                     event: CalendarEvent
                 }}
-                onDoubleClickEvent={ onDubleClick }
+                // onDoubleClickEvent={ onDubleClick }
                 onSelectEvent={ onSelect }
                 onSelectSlot={ onSlot }
                 onView={ onViewChange }
@@ -79,6 +84,7 @@ export const CalendarApp = () => {
             />
             <CalendarModal />
             <EventModal />
+            <button className='btn btn-success' onClick={ onAddOpen }>Add Date</button>
         </div>
     )
 }

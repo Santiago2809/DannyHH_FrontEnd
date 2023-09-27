@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRouter } from './router';
 import { ToastContainer } from 'react-toastify';
 import { Provider } from 'react-redux';

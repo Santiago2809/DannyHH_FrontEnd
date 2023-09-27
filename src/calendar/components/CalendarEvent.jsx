@@ -1,13 +1,13 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
 
+// eslint-disable-next-line react/prop-types
 export const CalendarEvent = ({ event }) => {
 
-    const { customer, address, location } = event;
-    // console.log(event)
+    const { title, address, locality } = event;
     return ( 
         <>
-            <strong>{ customer.name }</strong>
-            <strong> - { `${ address }, ${ location }` }</strong>
+            <strong>{ title }</strong>
+            <strong> - { `${ address }, ${ locality }` }</strong>
         </>
     )
 }
