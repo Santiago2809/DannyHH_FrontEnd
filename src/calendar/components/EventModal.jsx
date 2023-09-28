@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal'
 import { customStyles } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';

@@ -158,7 +158,7 @@ export const AddModalClient = () => {
                                 maxTime={new Date().setHours(14, 0)}
                                 showTimeSelect
                                 showTimeSelectOnly
-                                timeIntervals={15}
+                                timeIntervals={30}
                                 timeCaption="Time"
                                 dateFormat="h:mm aa"
                             />
