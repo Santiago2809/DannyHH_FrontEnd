@@ -1,15 +1,16 @@
 import axios from 'axios';
+import { base_url } from '../../types';
 
 export const addDBClient = async (customer = {}) => {
-    
-    const { frequency, dweek, no_week, price } = customer;
+
+    const { frequency, dweek, no_week, price, category } = customer;
     const today = new Date();
-    const created = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+    const created = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
     const db_Customer = {
         ...customer,
-        frequency: frequency.length > 1 ? frequency : null,
-        dweek: dweek.length > 1 ? dweek : null,
-        no_week: no_week.length > 1 ? no_week : null,
+        frequency: category != 'full_time' ? null : frequency.length > 1 ? frequency : null,
+        dweek: category != 'full_time' ? null : dweek.length > 1 ? dweek : null,
+        no_week: category != 'full_time' ? null : no_week.length > 1 ? no_week : null,
         created: created,
         price: +price
     }
@@ -17,13 +18,13 @@ export const addDBClient = async (customer = {}) => {
 
         const res = await axios({
             method: 'post',
-            url: '//localhost:3000/customer/addClient',
+            url: `${base_url}addClient`,
             data: {
-                ...db_Customer       
+                ...db_Customer
             }
         })
         console.log(res);
-    } catch( err) {
+    } catch (err) {
         console.log(err);
     }
 }

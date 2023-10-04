@@ -1,4 +1,6 @@
 
+export const base_url = 'https://dannyhhbackend.up.railway.app/';
+
 export const days_of_week = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']
 
 export const frequency_values = {

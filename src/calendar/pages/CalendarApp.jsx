@@ -17,6 +17,7 @@ export const CalendarApp = () => {
     const status = true;
     const dispatch = useDispatch();
     const customers = useSelector( state => state.clients.clients );
+    const isOpen = useSelector( state => state.ui.isAddOpenCal );
 
     
     useEffect(() => {
@@ -82,7 +83,7 @@ export const CalendarApp = () => {
                 min={minValue}
                 max={maxValue}
             />
-            <CalendarModal />
+            {isOpen && <CalendarModal />}        
             <EventModal />
             <button className='btn btn-success' onClick={ onAddOpen }>Add Date</button>
         </div>

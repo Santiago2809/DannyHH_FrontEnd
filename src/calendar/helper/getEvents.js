@@ -10,7 +10,7 @@ export const getEvents = (customers) => {
 		const daysWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 		const { id, name, phone, address, locality, frequency, hour, dweek, price, created, } = customer;
 		
-		const numbers = created.split('-');
+		const numbers = created?.split('-');
 		const customerDate = new Date(numbers[0], numbers[1]-1, numbers[2] );
 		let firstDate;
 		

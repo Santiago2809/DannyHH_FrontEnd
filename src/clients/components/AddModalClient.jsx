@@ -34,8 +34,13 @@ export const AddModalClient = () => {
 
     const { name, phone, address, locality, frecuency, dweek, noWeek, category, price } = values;
 
+    const checkCategory = () => {
+        if(category != 'full_time') return true
+    }
+    
     const onCloseModal = () => {
         dispatch(onCloseAddC());
+        reset();
     }
 
     const notifyError = (message) => {
@@ -79,10 +84,11 @@ export const AddModalClient = () => {
             notifyError(result.message)
             return;
         } else {
-            notifySuccess("Client saved")
             const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price };
             const id = (new Date().getTime());
             addDBClient(client)
+            notifySuccess("Client saved")
+
             dispatch(addClients({ ...client, id }));
             // addClient({ ...client, id });
             dispatch(onCloseAddC());
@@ -127,7 +133,7 @@ export const AddModalClient = () => {
                     <div className='mb-3 row'>
                         <div className='col-6'>
                             <label className='form-label'>Day of the week:</label>
-                            <select onChange={handleInputChange} name='dweek' className='form-select'>
+                            <select onChange={handleInputChange} name='dweek' className='form-select' disabled={checkCategory()}>
                                 <option value="" className='optionn'>--Not Selected--</option>
                                 <option value="monday" className='optionn'>Monday</option>
                                 <option value="tuesday" className='optionn'>Tuesday</option>
@@ -138,7 +144,7 @@ export const AddModalClient = () => {
                         </div>
                         <div className='col-6'>
                             <label className='form-label '>No. of week: </label>
-                            <select onChange={handleInputChange} name='noWeek' className='form-select'>
+                            <select onChange={handleInputChange} name='noWeek' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="1" className='optionn'>1</option>
                                 <option value="2" className='optionn'>2</option>
@@ -161,12 +167,13 @@ export const AddModalClient = () => {
                                 timeIntervals={30}
                                 timeCaption="Time"
                                 dateFormat="h:mm aa"
+                                disabled={checkCategory()}
                             />
                             {/* <input value={hour} onChange={handleInputChange} name='hour' type="text" className='form-control' placeholder='hour'/>     */}
                         </div>
                         <div className='col-6'>
                             <label>Duration:</label>
-                            <select onChange={handleInputChange} name='duration' className='form-select mt-2'>
+                            <select onChange={handleInputChange} name='duration' className='form-select mt-2' disabled={checkCategory()}>
                                 <option value="2" className='optionn'>2</option>
                                 <option value="1" className='optionn'>1</option>
                                 <option value="3" className='optionn'>3</option>
@@ -174,7 +181,7 @@ export const AddModalClient = () => {
                         </div>
                         <div className='col-12 mt-2'>
                             <label className='form-label'>Frecuency: </label>
-                            <select onChange={handleInputChange} name='frecuency' className='form-select'>
+                            <select onChange={handleInputChange} name='frecuency' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="monthly" className='optionn'>Monthly</option>
                                 <option value="every_two_weeks" className='optionn'>Every two weeks</option>

@@ -14,14 +14,15 @@ Modal.setAppElement('#root');
 export const CalendarModal = () => {
 
     const isOpen = useSelector( state => state.ui.isAddOpenCal );
+    const customers = useSelector( state => state.clients.clients );
     const dispatch = useDispatch();
+    
 
     const [formValues, setFormValues] = useState({
         customer: '',
         startDate: new Date(),
         duration: 2
     })
-    // const [showNumber, setShowNumber] = useState(false);
 
     const onCloseModal = () => {
         dispatch( onAddCloseCal() );
@@ -41,6 +42,20 @@ export const CalendarModal = () => {
             ...formValues,
             [changing]: event
         })
+    }
+
+    //Funcion validadora de los campos en el formulario
+    const validate = ( values = {} ) => {
+
+        if(values.customer === '' ){
+            notifyError("Invalid Customer")
+            return false;
+        }
+        if(values.startDate === ''){
+            notifyError("Invalid Date")
+            return false;
+        }
+        return true;
     }
 
     //Funcion que guarda los datos al hacer submit en el formulario
@@ -79,20 +94,6 @@ export const CalendarModal = () => {
         });
     }
 
-    //Funcion validadora de los campos en el formulario
-    const validate = ( values = {} ) => {
-
-        if(values.customer === '' ){
-            notifyError("Invalid Customer")
-            return false;
-        }
-        if(values.startDate === ''){
-            notifyError("Invalid Date")
-            return false;
-        }
-        return true;
-    }
-
     return (
         <Modal
             isOpen={ isOpen }
@@ -110,10 +111,11 @@ export const CalendarModal = () => {
                     <label className='mb-2'>Select customer:</label>
                     <select onChange={onInputChange} name='customer' className='form-select'>
                         <option value='' className='optionn'>--Not Selected--</option>
-                        <option value="1" className='optionn'>1</option>
-                        <option value="2" className='optionn'>2</option>
-                        <option value="3" className='optionn'>3</option>
-                        <option value="4" className='optionn'>4</option>
+                        {
+                            customers.map( customer => {
+                                return (<option key={customer.id} value={customer.id} className='optionn'>{customer.name} - {customer.phone}</option>)
+                            })
+                        }
                     </select>
                 </div>
 

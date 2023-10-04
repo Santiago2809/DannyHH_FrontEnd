@@ -2,11 +2,13 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: rgb(28,29,31);
+  background-color: rgb(28, 29, 31);
 }
+
 * {
   color: #fff
 }
+
 .loginscreen {
   min-height: 100vh;
   display: flex;
@@ -15,7 +17,7 @@ body {
 }
 
 /* Modal */
-.ReactModalPortal > div{
+.ReactModalPortal>div {
   opacity: 0;
 }
 
@@ -54,21 +56,27 @@ body {
   outline: none;
   padding: 10px;
 }
+
 label {
   color: #000;
 }
+
 .guardar span {
   color: #569AFE !important;
 }
+
 .guardar i {
   color: #569AFE;
 }
+
 .guardar:hover span {
   color: #fff !important;
 }
+
 .guardar:hover i {
   color: #fff !important;
 }
+
 .datepiker * {
   color: #000 !important;
 }
@@ -77,15 +85,19 @@ label {
   min-width: 180px !important;
   margin-right: 15px !important;
 }
+
 .optionn {
   color: #595C5F !important;
 }
+
 .react-datepicker__time-list-item {
   color: #000 !important;
 }
-/* .rbc-time-gutter > .rbc-timeslot-group:nth-child(-n+8) {
-  display: none;
+
+.rbc-agenda-table>tbody>tr>.rbc-agenda-event-cell:hover {
+  cursor: pointer;
 }
-.rbc-day-slot > .rbc-timeslot-group:nth-child(-n+8) {
-  display: none;
-} */
+
+.customer:hover {
+  cursor: pointer;
+}
