@@ -74,10 +74,6 @@ export const EditModalClient = () => {
                         <input className='form-control' type="text" name="hour" value={values.hour} onChange={handleInputChange} />
                     </div>
                     <div className='mb-2'>
-                        <label className='form-label'>Customer frequency:</label>
-                        <input className='form-control' type="text" name="frequency" value={values.frequency} onChange={handleInputChange} />
-                    </div>
-                    <div className='mb-2'>
                         <label className='form-label'>Customer Day of Week:</label>
                         <select onChange={handleInputChange} name='dweek' value={values.dweek} className='form-select' disabled={checkCategory()}>
                             <option value="" className='optionn'>--Not Selected--</option>
