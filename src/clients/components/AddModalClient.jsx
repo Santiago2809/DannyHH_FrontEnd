@@ -180,6 +180,10 @@ export const AddModalClient = () => {
                             </select>
                         </div>
                         <div className='col-12 mt-2'>
+                            <label>Comments:</label>
+                            <textarea name="" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div className='col-12 mt-2'>
                             <label className='form-label'>Frecuency: </label>
                             <select onChange={handleInputChange} name='frecuency' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
