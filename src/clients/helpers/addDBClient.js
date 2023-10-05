@@ -16,14 +16,13 @@ export const addDBClient = async (customer = {}) => {
     }
     try {
 
-        const res = await axios({
+        return await axios({
             method: 'post',
-            url: `${base_url}addClient`,
+            url: `${base_url}customer/addClient`,
             data: {
                 ...db_Customer
             }
         })
-        console.log(res);
     } catch (err) {
         console.log(err);
     }

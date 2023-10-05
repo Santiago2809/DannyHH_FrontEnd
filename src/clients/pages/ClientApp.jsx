@@ -8,7 +8,7 @@ const headers = ["Name", "Phone", "Address", "Location", "Frecuency", "Time", "D
 export const ClientApp = () => {
 
     const clients = useSelector(store => store.clients.clients);
-    const isEditOpenC = useSelector(store => store.ui.isEditOpenC);
+    const {isEditOpenC, isDelOpenC } = useSelector(store => store.ui);
     const dispatch = useDispatch();
 
     const onAddOpen = () => {
@@ -17,10 +17,6 @@ export const ClientApp = () => {
     const onDelOpen = () => {
         dispatch(onOpenDelC());
     };
-    const onEditOpen = () => {
-        dispatch(onOpenEditC());
-    };
-
     const onCustomerCLick = ({ target }) => {
         dispatch(setActiveCustomer(target.parentElement.id))
         dispatch(onOpenEditC());
@@ -33,9 +29,6 @@ export const ClientApp = () => {
                 <div className='controlBtns'>
                     <button onClick={onAddOpen} className='controlBtn btn btn-success'>
                         Add client
-                    </button>
-                    <button onClick={onEditOpen} className='controlBtn btn btn-warning' disabled>
-                        Edit client
                     </button>
                     <button onClick={onDelOpen} className='controlBtn btn btn-danger'>
                         Delete client
@@ -85,7 +78,9 @@ export const ClientApp = () => {
             {
                 isEditOpenC && <EditModalClient />
             }
-            <DeleteModalClient />
+            {
+                isDelOpenC && <DeleteModalClient />
+            }
         </div>
     )
 }

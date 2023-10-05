@@ -1,31 +1,24 @@
 import Modal from 'react-modal';
 import { useForm } from '../../hooks/useForm';
-import { delClient } from '../helpers/delClient';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { delClients, onCloseDelC } from '../../store';
+import { onCloseDelC } from '../../store';
 import { customStyles } from '../../helpers';
-import { getDbClients } from '../helpers/getDBClients';
+import { delDBClient } from '../helpers/delDBClient';
 
 export const DeleteModalClient = () => {
 
-    const isOpen = useSelector( state => state.ui.isDelOpenC );
     const dispatch = useDispatch();
-    const clients = useSelector( state => state.clients.clients );
-    // const [clients, setClients] = useState([])
+    const isOpen = useSelector( state => state.ui.isDelOpenC );
+    const customers = useSelector(state => state.clients.clients);
 
-    const [value, handleInputChange ] = useForm({
-        client: clients[0]?.id,
-    });
+    const [values, handleInputChange] = useForm({
+        id: customers[0].id
+    })
 
     const onCloseModal = () => {
         dispatch(onCloseDelC());
-        // setIsOpen(!isOpen);
     }
-
-    // useEffect(() => {
-        
-    // }, [])
 
     const delCorrectly = () => {
         toast.success('Client deleted correctly', {
@@ -40,15 +33,26 @@ export const DeleteModalClient = () => {
             });
     }
     
-    const onDelete = () => {
-        const clientid = value.client != ''  ? value.client*1 : clients[0].id;
-        delClient( clientid );
-        dispatch( delClients( clientid ));
-        dispatch( getDbClients());
-        dispatch(onCloseDelC());
-        delCorrectly();
+    const onDelete = async () => {
+        
+        await delDBClient(values.id)
+            .then( () => {
+                dispatch(onCloseDelC());
+                delCorrectly();
+            })
+            .catch( () => {
+                return toast.error("Ups! Something gone wrong", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            })
     }
-
 
     return (
         <div>
@@ -64,18 +68,11 @@ export const DeleteModalClient = () => {
             <hr />
             <div className='mt-3'>
                 <label className='form-label fs-3'>Client to delete:</label>
-                <select className='form-select' onChange={handleInputChange} name='client'>
-                    {/* <option value="1" className='optionn'>1</option>
-                    <option value="2" className='optionn'>2</option>
-                    <option value="3" className='optionn'>3</option>
-                    <option value="4" className='optionn'>4</option> */}
+                <select className='form-select' onChange={handleInputChange} name='id' value={values.id}>
                     {
-                        clients != null &&
-                        clients.map( client => {
-                            return (
-                                <option key={client.id} className='optionn' value={client.id}>{client.name} -- {client.phone}</option>
-                            )
-                        })
+                        customers.map( customer => {
+                            return (<option key={customer.id} value={customer.id} style={{color: "#000"}}>{customer.name} - {customer.phone}</option>)
+                        }) 
                     }
                 </select>  
             </div>
