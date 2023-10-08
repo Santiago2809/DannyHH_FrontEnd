@@ -5,6 +5,7 @@ export const getEvents = (customers) => {
 	// const customers = JSON.parse(localStorage.getItem('customers'));
 	
 	const events = customers?.map(customer => {
+		if (customer.dweek === null || customer.category === "NA")return [];
 		let dates = [];
 		
 		const daysWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -51,6 +52,20 @@ export const getEvents = (customers) => {
 					})
 					break;
 				}
+				case 'every_week': {
+					const start_date = addWeeks(dates.at(-1)?.start,1);
+					dates.push({
+						id,
+						title: name,
+						start: start_date,
+						end: addHours(start_date, 2),
+						phone,
+						address,
+						locality,
+						price
+					})
+					break;
+				}
 				case 'every_two_weeks':{
 					const start_date = addWeeks(dates.at(-1)?.start,2);
 					dates.push({
@@ -79,7 +94,9 @@ export const getEvents = (customers) => {
 					})
 					break
 				}
-				
+				case null:{
+					break
+				}
 				default:
 					console.log('error');
 			}

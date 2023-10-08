@@ -49,6 +49,7 @@ export const ClientApp = () => {
                             clients?.map(client => {
                                 const frequency = client.frequency != null ? client.frequency : "Not Available";
                                 const no_week = client.no_week != null ? client.no_week : "Not Available";
+                                const dweek = client.dweek != null ? client.dweek : "Not Available";
                                 return (
                                     <tr key={client.id} id={client.id} onClick={onCustomerCLick} className='customer'>
                                         <td className='tableElement p-2'>{client.name}</td>
@@ -57,7 +58,7 @@ export const ClientApp = () => {
                                         <td className='tableElement p-2'>{client.locality}</td>
                                         <td className='tableElement p-2'>{frequency}</td>
                                         <td className='tableElement p-2'>{client.hour}</td>
-                                        <td className='tableElement p-2'>{client.dweek}</td>
+                                        <td className='tableElement p-2'>{dweek}</td>
                                         <td className='tableElement p-2'>{no_week}</td>
                                         <td className='tableElement p-2'>{client.category}</td>
                                         <td className='tableElement p-2'>{client.price}</td>
