@@ -7,15 +7,16 @@ import ReactDatePicker from 'react-datepicker';
 import { useState } from 'react';
 import { fromUnixTime, millisecondsToSeconds } from 'date-fns';
 import { toast } from 'react-toastify';
+import { editClient } from '../helpers/editClient';
 
 export const EditModalClient = () => {
 
     const dispatch = useDispatch();
     const isOpen = useSelector(state => state.ui.isEditOpenC);
     const activeCustomer = useSelector(state => state.clients.activeCustomer);
-    const { name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments } = activeCustomer;
+    const { id, name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments } = activeCustomer;
 
-    const [hours, setHour] = useState(new Date().setHours(8, 0));
+    const [hours, setHour] = useState(new Date().setHours(+hour.substring(0,hour.indexOf(':')), +hour.substring(hour.indexOf(':')+1)));
     const [changedValues, setChangedValues] = useState([])
     const [values, handleInputChange] = useForm({
         name,
@@ -66,11 +67,11 @@ export const EditModalClient = () => {
             theme: "colored",
         });
     }
-    const twoCalls = (e)=> {
+    const twoCalls = (e) => {
         handleInputChange(e)
-        if(changedValues.length > 0){
+        if (changedValues.length > 0) {
             setChangedValues(state => {
-                if(!state.includes(e.target.name)) return [...state, e.target.name]
+                if (!state.includes(e.target.name)) return [...state, e.target.name]
                 else return state;
             })
         } else {
@@ -80,23 +81,54 @@ export const EditModalClient = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const compareActive = (({id,created,...obj}) => obj )(activeCustomer)
+        // eslint-disable-next-line no-unused-vars
+        const compareActive = (({ id, created, ...obj }) => obj)(activeCustomer)
+        const categories = ["ocasional", "snowbird", "NA"]
+
         const editedCustomer = {
             ...values,
-            frequency: values.frequency === "" ? null : values.frequency,
-            dweek: values.dwe === "" ? null : values.dweek ,
-            no_week: values.no_week === "" ? null : values.no_week,
+            price: +values.price,
+            frequency: values.frequency === "" || categories.includes(values.category) ? null : values.frequency,
+            dweek: values.dwe === "" ? null : values.dweek,
+            no_week: values.no_week === "" || values.no_week === null ? null : +values.no_week,
             comments: values.comments === "" ? null : values.comments
 
         }
-        if(JSON.stringify(compareActive) === JSON.stringify(editedCustomer)) return notifyError("Must be at leat 1 edited value")
+        //Comprobar si se han editado los valores
+        console.log(compareActive)
+        console.log(editedCustomer)
+        if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer)) return notifyError("Must be at leat 1 edited value")
         console.log(changedValues)
+
+
         //Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
         const formatHour = (typeof hours === 'number') ? fromUnixTime(millisecondsToSeconds(hours)) : hours;
+        // eslint-disable-next-line no-unused-vars
         const finalHour = `${formatHour.getHours()}:${formatHour.getMinutes() == "0" ? "00" : formatHour.getMinutes()}`;
-        // console.log({name, phone, address, locality, frecuency, finalHour, dweek, noWeek, category, price});4
+        
+        //
+        let finalValues = changedValues.includes('hour') ? { hour: finalHour } : {};
+        changedValues.forEach((elem) => {
+            if (compareActive[elem] === editedCustomer[elem]) return
+            finalValues = {
+                ...finalValues,
+                [elem]: values[elem]
+            }
+        })
+
+        editClient(id, finalValues)
+            .then(() => {
+                notifySuccess("Customer edited successfully");
+                onCloseModal();
+            })
+            .catch(() => {
+                notifyError("Ups! Something gone wrong")
+            })
+        //TODO: Hacer el dispatch editar los clientes en el estado global
+        console.log(finalValues)
+
     }
-    
+
     return (
         <div>
             <Modal
@@ -142,7 +174,7 @@ export const EditModalClient = () => {
                             selected={hours}
                             className='form-control'
                             onChange={(date) => { setHour(date) }}
-                            minTime={new Date().setHours(8, 0)}
+                            minTime={new Date().setHours(+hour.substring(0,hour.indexOf(':')) , +hour.substring(hour.indexOf(':')+1))}
                             maxTime={new Date().setHours(14, 0)}
                             showTimeSelect
                             showTimeSelectOnly
@@ -165,7 +197,7 @@ export const EditModalClient = () => {
                     </div>
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Number of Week:</label>
-                        <select onChange={twoCalls} name='no_week' value={values.no_week == null ? '' : values.no_week  } className='form-select' disabled={checkCategory()}>
+                        <select onChange={twoCalls} name='no_week' value={values.no_week == null ? '' : values.no_week} className='form-select' disabled={checkCategory()}>
                             <option value='' className='optionn'>--Not Selected--</option>
                             <option value="1" className='optionn'>1</option>
                             <option value="2" className='optionn'>2</option>
@@ -188,7 +220,7 @@ export const EditModalClient = () => {
                     </div>
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Comments:</label>
-                        <input className='form-control' type="text" name="comments" value={values.comments == null ? '' : values.comments } onChange={handleInputChange} />
+                        <input className='form-control' type="text" name="comments" value={values.comments == null ? '' : values.comments} onChange={handleInputChange} />
                     </div>
 
                     <div className='d-flex justify-content-center mt-3'>

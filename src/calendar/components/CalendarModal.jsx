@@ -13,10 +13,10 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-    const isOpen = useSelector( state => state.ui.isAddOpenCal );
-    const customers = useSelector( state => state.clients.clients );
+    const isOpen = useSelector(state => state.ui.isAddOpenCal);
+    const customers = useSelector(state => state.clients.clients);
     const dispatch = useDispatch();
-    
+
 
     const [formValues, setFormValues] = useState({
         customer: '',
@@ -25,7 +25,7 @@ export const CalendarModal = () => {
     })
 
     const onCloseModal = () => {
-        dispatch( onAddCloseCal() );
+        dispatch(onAddCloseCal());
     };
 
     //Funcion que guarda los campos del formulario
@@ -37,7 +37,7 @@ export const CalendarModal = () => {
     }
 
     //Funcion que guarda las fechas cuando cambian
-    const onDateChange = ( event, changing ) => {
+    const onDateChange = (event, changing) => {
         setFormValues({
             ...formValues,
             [changing]: event
@@ -45,13 +45,13 @@ export const CalendarModal = () => {
     }
 
     //Funcion validadora de los campos en el formulario
-    const validate = ( values = {} ) => {
+    const validate = (values = {}) => {
 
-        if(values.customer === '' ){
+        if (values.customer === '') {
             notifyError("Invalid Customer")
             return false;
         }
-        if(values.startDate === ''){
+        if (values.startDate === '') {
             notifyError("Invalid Date")
             return false;
         }
@@ -62,10 +62,10 @@ export const CalendarModal = () => {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        if(validate({...formValues})){
+        if (validate({ ...formValues })) {
 
             notifySuccess("Saved Date")
-            dispatch( onAddCloseCal() );
+            dispatch(onAddCloseCal());
         }
     }
 
@@ -96,24 +96,25 @@ export const CalendarModal = () => {
 
     return (
         <Modal
-            isOpen={ isOpen }
-            onRequestClose={ onCloseModal }
+            isOpen={isOpen}
+            onRequestClose={onCloseModal}
             style={customStyles}
             className="modal"
             overlayClassName="modal-fondo"
-            closeTimeoutMS={ 200 }
-        >   
+            closeTimeoutMS={200}
+        >
             <h1>New Date</h1>
             <hr />
-            <form className="container needs-validation" onSubmit={ onSubmit }>
+            <form className="container needs-validation" onSubmit={onSubmit}>
 
                 <div>
                     <label className='mb-2'>Select customer:</label>
                     <select onChange={onInputChange} name='customer' className='form-select'>
                         <option value='' className='optionn'>--Not Selected--</option>
                         {
-                            customers.map( customer => {
-                                return (<option key={customer.id} value={customer.id} className='optionn'>{customer.name} - {customer.phone}</option>)
+                            customers.map(customer => {
+                                if (customer.category != "full_time" && customer.category != "NA")
+                                    return (<option key={customer.id} value={customer.id} className='optionn'>{customer.name} - {customer.phone}</option>)
                             })
                         }
                     </select>
@@ -121,17 +122,17 @@ export const CalendarModal = () => {
 
                 <div className="form-group mb-2 datepiker mt-3">
                     <label className='mb-1'>Start Date and Time:</label>
-                    <ReactDatePicker 
-                            showTimeSelect 
-                            showTimeInput 
-                            className='form-control'
-                            selected={formValues.startDate} 
-                            minDate={new Date().setHours(8,0)}
-                            minTime={new Date().setHours(8, 0)}
-                            maxTime={new Date().setHours(14, 0)}
-                            onChange={ (event) => onDateChange(event, 'startDate')}
-                            dateFormat="Pp"
-                        />
+                    <ReactDatePicker
+                        showTimeSelect
+                        showTimeInput
+                        className='form-control'
+                        selected={formValues.startDate}
+                        minDate={new Date().setHours(8, 0)}
+                        minTime={new Date().setHours(8, 0)}
+                        maxTime={new Date().setHours(14, 0)}
+                        onChange={(event) => onDateChange(event, 'startDate')}
+                        dateFormat="Pp"
+                    />
                 </div>
 
                 <div>
