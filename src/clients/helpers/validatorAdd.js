@@ -1,5 +1,5 @@
 
-export const validateAdd = ( name , phone , address , locality , price, frecuency, dweek, noWeek, comments ) => {
+export const validateAdd = ( name , phone , address , locality ,duration , price, frecuency, dweek, noWeek, comments ) => {
     let validate = {
         type: 'error',
         message: 'no message',

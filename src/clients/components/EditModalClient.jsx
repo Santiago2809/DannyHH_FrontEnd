@@ -14,7 +14,7 @@ export const EditModalClient = () => {
     const dispatch = useDispatch();
     const isOpen = useSelector(state => state.ui.isEditOpenC);
     const activeCustomer = useSelector(state => state.clients.activeCustomer);
-    const { id, name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments } = activeCustomer;
+    const { id, name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments, duration } = activeCustomer;
 
     const [hours, setHour] = useState(new Date().setHours(+hour.substring(0,hour.indexOf(':')), +hour.substring(hour.indexOf(':')+1)));
     const [changedValues, setChangedValues] = useState([])
@@ -29,7 +29,8 @@ export const EditModalClient = () => {
         no_week,
         category,
         price,
-        comments: comments ? comments : ""
+        comments: comments ? comments : "",
+        duration
     })
 
     const checkCategory = () => {
@@ -129,6 +130,8 @@ export const EditModalClient = () => {
 
     }
 
+    console.log(values.duration)
+
     return (
         <div>
             <Modal
@@ -183,6 +186,14 @@ export const EditModalClient = () => {
                             dateFormat="h:mm aa"
                             disabled={checkCategory()}
                         />
+                    </div>
+                    <div className='mb-2'>
+                        <label className='form-label fw-bold'>Duration:</label>
+                        <select onChange={handleInputChange} value={values.duration} name='duration' className='form-select mt-2' disabled={checkCategory()}>
+                            <option className='optionn' value={1}>1</option>
+                            <option className='optionn' value={2}>2</option>
+                            <option className='optionn' value={3}>3</option>
+                        </select>
                     </div>
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Day of Week:</label>

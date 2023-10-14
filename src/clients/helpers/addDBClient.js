@@ -3,7 +3,7 @@ import { base_url } from '../../types';
 
 export const addDBClient = async (customer = {}) => {
 
-    const { frequency, dweek, no_week, price, category } = customer;
+    const { frequency, dweek, no_week, price, category, duration } = customer;
     const today = new Date();
     const created = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
     const db_Customer = {
@@ -12,7 +12,8 @@ export const addDBClient = async (customer = {}) => {
         dweek: category != 'full_time' ? null : dweek.length > 1 ? dweek : null,
         no_week: category != 'full_time' ? null : no_week.length > 1 ? no_week : null,
         created: created,
-        price: +price
+        price: +price,
+        duration: +duration
     }
     try {
 

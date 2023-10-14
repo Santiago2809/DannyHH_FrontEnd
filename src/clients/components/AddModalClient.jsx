@@ -30,10 +30,11 @@ export const AddModalClient = () => {
         noWeek: '',
         category: 'full_time',
         comments: '',
-        price: ''
+        price: '',
+        duration: 2
     })
 
-    const { name, phone, address, locality, frecuency, dweek, noWeek, category, price, comments } = values;
+    const { name, phone, address, locality, frecuency, dweek, noWeek, category, price, comments, duration } = values;
 
     const checkCategory = () => {
         if (category != 'full_time') return true
@@ -87,7 +88,7 @@ export const AddModalClient = () => {
             const today = new Date();
             const created = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-            const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price, comments, created };
+            const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price, comments, created, duration };
 
             await addDBClient(client)
                 .then(() => {
