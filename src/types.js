@@ -1,5 +1,7 @@
 
-export const base_url = 'https://dannyhhbackend.up.railway.app/';
+// export const base_url = 'https://dannyhhbackend.up.railway.app/';
+export const base_url = 'https://localhost:3001/';
+
 
 export const days_of_week = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']
 
