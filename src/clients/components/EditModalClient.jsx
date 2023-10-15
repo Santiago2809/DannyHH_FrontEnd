@@ -80,7 +80,7 @@ export const EditModalClient = () => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // eslint-disable-next-line no-unused-vars
         const compareActive = (({ id, created, ...obj }) => obj)(activeCustomer)
@@ -117,7 +117,7 @@ export const EditModalClient = () => {
             }
         })
 
-        editClient(id, finalValues)
+        await editClient(id, finalValues)
             .then(() => {
                 notifySuccess("Customer edited successfully");
                 onCloseModal();

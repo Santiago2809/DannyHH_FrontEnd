@@ -92,8 +92,8 @@ export const AddModalClient = () => {
 
             await addDBClient(client)
                 .then(() => {
-                    dispatch(addClients({ ...client, id: customers.at(-1).id + 1 })),
-                        notifySuccess("Client saved")
+                    dispatch(addClients({ ...client, id: customers.at(-1).id + 1 }))
+                    notifySuccess("Client saved")
                 })
                 .catch(() => {
                     notifyError("Ups! There was a problem saving the client")
@@ -101,6 +101,7 @@ export const AddModalClient = () => {
                 .finally(() => {
                     onCloseModal();
                 });
+            
         }
 
     }
@@ -196,8 +197,9 @@ export const AddModalClient = () => {
                             <select onChange={handleInputChange} name='frecuency' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="monthly" className='optionn'>Monthly</option>
-                                <option value="every_two_weeks" className='optionn'>Every two weeks</option>
-                                <option value="every_three_weeks" className='optionn'>Every three weeks</option>
+                                <option value="every_week" className='optionn'>Every week</option>
+                                <option value="every_two_weeks" className='optionn'>Every 2 weeks</option>
+                                <option value="every_three_weeks" className='optionn'>Every 3 weeks</option>
                             </select>
                         </div>
                     </div>

@@ -5,11 +5,11 @@ export const getEvents = (customers) => {
 	// const customers = JSON.parse(localStorage.getItem('customers'));
 	
 	const events = customers?.map(customer => {
-		if (customer.dweek === null || customer.category === "NA")return [];
+		if (customer.dweek === null || customer.category === "NA") return [];
 		let dates = [];
 		
 		const daysWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-		const { id, name, phone, address, locality, frequency, hour, dweek, price, created, } = customer;
+		const { id, name, phone, address, locality, frequency, hour, dweek, price, created, duration } = customer;
 		
 		const numbers = created?.split('-');
 		const customerDate = new Date(numbers[0], numbers[1]-1, numbers[2] );
@@ -44,7 +44,7 @@ export const getEvents = (customers) => {
 						id,
 						title: name,
 						start: start_date,
-						end: addHours(start_date, 2),
+						end: addHours(start_date, duration ),
 						phone,
 						address,
 						locality,
@@ -58,7 +58,7 @@ export const getEvents = (customers) => {
 						id,
 						title: name,
 						start: start_date,
-						end: addHours(start_date, 2),
+						end: addHours(start_date, duration),
 						phone,
 						address,
 						locality,
@@ -72,7 +72,7 @@ export const getEvents = (customers) => {
 						id,
 						title: name,
 						start: start_date,
-						end: addHours(start_date, 2),
+						end: addHours(start_date, duration),
 						phone,
 						address,
 						locality,
@@ -86,7 +86,7 @@ export const getEvents = (customers) => {
 						id,
 						title: name,
 						start: start_date,
-						end: addHours(start_date, 2),
+						end: addHours(start_date, duration),
 						phone,
 						address,
 						locality,
