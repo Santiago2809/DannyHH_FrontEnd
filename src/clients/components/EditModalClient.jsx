@@ -33,8 +33,22 @@ export const EditModalClient = () => {
         duration
     })
 
+
+
     const checkCategory = () => {
         if (values.category != 'full_time' && values.category != "NA") return true
+    }
+
+    const onHourChange = (date) => {
+        setHour(date)
+        if (changedValues.length > 0 ) {
+            setChangedValues(state => {
+                if (!state.includes("hour")) return [...state, "hour"]
+                else return state;
+            })
+        } else {
+            setChangedValues(state => [...state, "hour"])
+        }
     }
 
 
@@ -86,7 +100,7 @@ export const EditModalClient = () => {
         const compareActive = (({ id, created, ...obj }) => obj)(activeCustomer)
         const categories = ["ocasional", "snowbird", "NA"]
 
-        const editedCustomer = {
+        let editedCustomer = {
             ...values,
             price: +values.price,
             frequency: values.frequency === "" || categories.includes(values.category) ? null : values.frequency,
@@ -95,11 +109,14 @@ export const EditModalClient = () => {
             comments: values.comments === "" ? null : values.comments
 
         }
+        if(changedValues.includes('hour')){
+            editedCustomer = {...editedCustomer, hour: `${hours.getHours()}:${hours.getMinutes()}`}
+        }
         //Comprobar si se han editado los valores
-        console.log(compareActive)
-        console.log(editedCustomer)
+        // console.log(compareActive)
+        // console.log(editedCustomer)
         if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer)) return notifyError("Must be at leat 1 edited value")
-        console.log(changedValues)
+        // console.log(changedValues)
 
 
         //Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
@@ -107,16 +124,30 @@ export const EditModalClient = () => {
         // eslint-disable-next-line no-unused-vars
         const finalHour = `${formatHour.getHours()}:${formatHour.getMinutes() == "0" ? "00" : formatHour.getMinutes()}`;
         
-        //
         let finalValues = changedValues.includes('hour') ? { hour: finalHour } : {};
         changedValues.forEach((elem) => {
+            if (elem == 'hour') return
             if (compareActive[elem] === editedCustomer[elem]) return
             finalValues = {
                 ...finalValues,
                 [elem]: values[elem]
             }
         })
+        
+        if( finalValues.duration != undefined ){
+            finalValues = {
+                ...finalValues,
+                duration: +finalValues.duration
+            }
+        }
+        if( finalValues.price != undefined ){
+            finalValues = {
+                ...finalValues,
+                price: +finalValues.price
+            }
+        }
 
+        // console.log(finalValues)
         await editClient(id, finalValues)
             .then(() => {
                 notifySuccess("Customer edited successfully");
@@ -126,11 +157,8 @@ export const EditModalClient = () => {
                 notifyError("Ups! Something gone wrong")
             })
         //TODO: Hacer el dispatch editar los clientes en el estado global
-        console.log(finalValues)
 
     }
-
-    console.log(values.duration)
 
     return (
         <div>
@@ -163,7 +191,7 @@ export const EditModalClient = () => {
                     </div>
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Frecuency:</label>
-                        <select onChange={twoCalls} name='frecuency' className='form-select' disabled={checkCategory()}>
+                        <select onChange={twoCalls} name='frequency' className='form-select' value={values.frequency} disabled={checkCategory()}>
                             <option value='' className='optionn'>--Not Selected--</option>
                             <option value="monthly" className='optionn'>Monthly</option>
                             <option value="every_week" className='optionn'>Every week</option>
@@ -176,8 +204,8 @@ export const EditModalClient = () => {
                         <ReactDatePicker
                             selected={hours}
                             className='form-control'
-                            onChange={(date) => { setHour(date) }}
-                            minTime={new Date().setHours(+hour.substring(0,hour.indexOf(':')) , +hour.substring(hour.indexOf(':')+1))}
+                            onChange={onHourChange}
+                            minTime={new Date().setHours(9,0)}
                             maxTime={new Date().setHours(14, 0)}
                             showTimeSelect
                             showTimeSelectOnly
@@ -189,7 +217,7 @@ export const EditModalClient = () => {
                     </div>
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Duration:</label>
-                        <select onChange={handleInputChange} value={values.duration} name='duration' className='form-select mt-2' disabled={checkCategory()}>
+                        <select onChange={twoCalls} value={values.duration} name='duration' className='form-select mt-2' disabled={checkCategory()}>
                             <option className='optionn' value={1}>1</option>
                             <option className='optionn' value={2}>2</option>
                             <option className='optionn' value={3}>3</option>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { base_url } from '../../types';
 
 export const editClient = async(id, customer = {}) => {
-
+    
     try {
         const res = await axios({
             method: 'put',
