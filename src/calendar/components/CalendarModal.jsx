@@ -7,6 +7,8 @@ import '../../index.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { onAddCloseCal } from '../../store';
 import { toast } from 'react-toastify';
+import { fromUnixTime, millisecondsToSeconds } from 'date-fns';
+import { addEvent } from '../helper/addEvent';
 
 
 Modal.setAppElement('#root');
@@ -20,8 +22,10 @@ export const CalendarModal = () => {
 
     const [formValues, setFormValues] = useState({
         customer: '',
-        startDate: new Date(),
-        duration: 2
+        date: new Date().setHours(8, 0),
+        duration: 2,
+        price: '',
+        comments: ''
     })
 
     const onCloseModal = () => {
@@ -37,7 +41,7 @@ export const CalendarModal = () => {
     }
 
     //Funcion que guarda las fechas cuando cambian
-    const onDateChange = (event, changing) => {
+    const onDateChange = (event = new Date(), changing) => {
         setFormValues({
             ...formValues,
             [changing]: event
@@ -51,21 +55,45 @@ export const CalendarModal = () => {
             notifyError("Invalid Customer")
             return false;
         }
-        if (values.startDate === '') {
+        if (values.date === '') {
             notifyError("Invalid Date")
+            return false;
+        }
+        if (values.price.trim() === '' || isNaN(+values.price)) {
+            notifyError("Invalid Price")
             return false;
         }
         return true;
     }
 
     //Funcion que guarda los datos al hacer submit en el formulario
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         if (validate({ ...formValues })) {
 
-            notifySuccess("Saved Date")
-            dispatch(onAddCloseCal());
+            //Si la hora no fue cambiada viene en timestamp
+            const formatHour = (typeof formValues.date === 'number') ? fromUnixTime(millisecondsToSeconds(formValues.date)) : formValues.date;
+
+            const idx = formatHour.toLocaleTimeString().lastIndexOf(':');
+            const value = `${formatHour.toLocaleDateString()},${formatHour.toLocaleTimeString().substring(0, idx)}`
+            const finalValues = {
+                ...formValues,
+                date: value,    
+                duration: +formValues.duration,
+                price: +formValues.price,
+                comments: formValues.comments.trim().length < 1 ? null : formValues.comments
+            }
+            console.log(finalValues)
+            await addEvent(finalValues)
+                .then(() => {
+                    notifySuccess("Saved Date")
+                    onCloseModal()
+                })
+                .catch(() => {
+                    notifyError("Ups! Something went wrong");
+                })
+            // dispatch(onAddCloseCal());
         }
     }
 
@@ -126,11 +154,11 @@ export const CalendarModal = () => {
                         showTimeSelect
                         showTimeInput
                         className='form-control'
-                        selected={formValues.startDate}
+                        selected={formValues.date}
                         minDate={new Date().setHours(8, 0)}
                         minTime={new Date().setHours(8, 0)}
                         maxTime={new Date().setHours(14, 0)}
-                        onChange={(event) => onDateChange(event, 'startDate')}
+                        onChange={(event) => onDateChange(event, 'date')}
                         dateFormat="Pp"
                     />
                 </div>
@@ -141,9 +169,14 @@ export const CalendarModal = () => {
                         <option value="2" className='optionn'>2</option>
                         <option value="1" className='optionn'>1</option>
                         <option value="3" className='optionn'>3</option>
-                        <option value="4" className='optionn'>4</option>
                     </select>
                 </div>
+
+                <div>
+                    <label className='form-label'>Price</label>
+                    <input className='form-control' autoComplete='off' type="text" value={formValues.price} onChange={onInputChange} name='price'/>
+                </div>
+
 
                 <hr />
                 {/* <div className='form-group mb-2'>

@@ -146,6 +146,14 @@ export const EditModalClient = () => {
                 price: +finalValues.price
             }
         }
+        if (finalValues.category != undefined && finalValues.category != "full_time" ){
+            finalValues = {
+                ...finalValues,
+                dweek: null,
+                no_week: null,
+                frequency: null
+            }
+        }
 
         // console.log(finalValues)
         await editClient(id, finalValues)
