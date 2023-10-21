@@ -25,7 +25,9 @@ export const CalendarModal = () => {
         date: new Date().setHours(8, 0),
         duration: 2,
         price: '',
-        comments: ''
+        comments: '',
+        address: '',
+        locality: ''
     })
 
     const onCloseModal = () => {
@@ -57,6 +59,14 @@ export const CalendarModal = () => {
         }
         if (values.date === '') {
             notifyError("Invalid Date")
+            return false;
+        }
+        if (values.address.length < 4){
+            notifyError("Invalid Address")
+            return false;
+        }
+        if (values.locality.length < 4){
+            notifyError("Invalid Locality")
             return false;
         }
         if (values.price.trim() === '' || isNaN(+values.price)) {
@@ -135,7 +145,7 @@ export const CalendarModal = () => {
             <hr />
             <form className="container needs-validation" onSubmit={onSubmit}>
 
-                <div>
+                <div className='mb-2'>
                     <label className='mb-2'>Select customer:</label>
                     <select onChange={onInputChange} name='customer' className='form-select'>
                         <option value='' className='optionn'>--Not Selected--</option>
@@ -161,6 +171,16 @@ export const CalendarModal = () => {
                         onChange={(event) => onDateChange(event, 'date')}
                         dateFormat="Pp"
                     />
+                </div>
+
+                <div className='mb-2'>
+                    <label className='form-label'>Address:</label>
+                    <input type="text" className='form-control' placeholder='Address...' name='address' value={formValues.address} onChange={onInputChange}/>
+                </div>
+                
+                <div className='mb-2'>
+                    <label className='form-label'>Locality:</label>
+                    <input type="text" className='form-control' placeholder='Locality...' name='locality' value={formValues.locality} onChange={onInputChange}/>
                 </div>
 
                 <div>

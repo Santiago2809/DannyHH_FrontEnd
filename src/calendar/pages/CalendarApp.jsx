@@ -87,7 +87,7 @@ export const CalendarApp = () => {
             />
             {isOpen && <CalendarModal />}
             <EventModal />
-            <button className='btn btn-success' onClick={onAddOpen}>Add Date</button>
+            <button className='btn btn-success  ms-3' onClick={onAddOpen}>Add Date</button>
         </div>
     )
 }
