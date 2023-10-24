@@ -89,6 +89,7 @@ export const CalendarModal = () => {
             const value = `${formatHour.toLocaleDateString()},${formatHour.toLocaleTimeString().substring(0, idx)}`
             const finalValues = {
                 ...formValues,
+                customer: +formValues.customer,
                 date: value,    
                 duration: +formValues.duration,
                 price: +formValues.price,
