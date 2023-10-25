@@ -96,6 +96,7 @@ export const CalendarModal = () => {
                 comments: formValues.comments.trim().length < 1 ? null : formValues.comments
             }
             console.log(finalValues)
+            return
             await addEvent(finalValues)
                 .then(() => {
                     notifySuccess("Saved Date")
