@@ -16,23 +16,25 @@ export const CalendarApp = () => {
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || "month");
     const status = true;
     const dispatch = useDispatch();
-    const customers = useSelector( state => state.clients.clients );
-    const isOpen = useSelector( state => state.ui.isAddOpenCal );
+    const calendarEvents = useSelector(state => state.calendar.events);
+    const customers = useSelector(state => state.clients.clients);
+    const isOpen = useSelector(state => state.ui.isAddOpenCal);
 
-    
+
     useEffect(() => {
-        getEvents(customers)?.forEach( clientDates => {
-			clientDates.forEach( event => {
-				events.push(event)
-			})
-		})
+        if (calendarEvents.length > 1) return
+        getEvents(customers)?.forEach(clientDates => {
+            clientDates.forEach(event => {
+                events.push(event)
+            })
+        })
         dispatch(setEvents(events))
-		return () => {
-			events = [];
-		}
+        return () => {
+            events = [];
+        }
     }, [customers, dispatch])
 
-    if( !status ) {
+    if (!status) {
         return <Navigate to="/auth" />
     }
 
@@ -40,8 +42,8 @@ export const CalendarApp = () => {
     //     console.log({ doubleClick: event})
     // }
 
-    const onSelect = ( event ) => {
-        
+    const onSelect = (event) => {
+
         dispatch(setActiveEvent({
             ...event,
             start: event.start.toString(),
@@ -49,17 +51,17 @@ export const CalendarApp = () => {
         }))
         dispatch(onOpenEvent());
     }
-
+    
     const onSlot = (event) => {
         console.log(event)
     }
 
     const onViewChange = (view) => {
-        
+
         view === 'agenda' ? localStorage.setItem('lastView', "month") : localStorage.setItem('lastView', view);
         setLastView(view != 'agenda' ? view : 'month');
     }
-	
+
     const onAddOpen = () => {
         dispatch(onAddOpenCal())
     }
@@ -68,24 +70,24 @@ export const CalendarApp = () => {
         <div>
             <Calendar
                 localizer={localizer}
-                defaultView={ lastView }
-                events={events}
+                defaultView={lastView}
+                events={calendarEvents}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 'calc(100vh - 150px)', padding: '15px'}}
+                style={{ height: 'calc(100vh - 150px)', padding: '15px' }}
                 components={{
                     event: CalendarEvent
                 }}
                 // onDoubleClickEvent={ onDubleClick }
-                onSelectEvent={ onSelect }
-                onSelectSlot={ onSlot }
-                onView={ onViewChange }
+                onSelectEvent={onSelect}
+                onSelectSlot={onSlot}
+                onView={onViewChange}
                 min={minValue}
                 max={maxValue}
             />
-            {isOpen && <CalendarModal />}        
+            {isOpen && <CalendarModal />}
             <EventModal />
-            <button className='btn btn-success' onClick={ onAddOpen }>Add Date</button>
+            <button className='btn btn-success  ms-3' onClick={onAddOpen}>Add Date</button>
         </div>
     )
 }

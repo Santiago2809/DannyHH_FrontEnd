@@ -1,6 +1,5 @@
 
-
-export const validateAdd = ( name , phone , address , locality , price, frecuency, dweek, noWeek ) => {
+export const validateAdd = ( name , phone , address , locality , price, frecuency, dweek, noWeek, comments ) => {
     let validate = {
         type: 'error',
         message: 'no message',
@@ -26,6 +25,10 @@ export const validateAdd = ( name , phone , address , locality , price, frecuenc
         validate.message = 'Locality must be at least 4 characters'
         return validate;
     }
+    if( comments.length >= 1 && comments.length < 6){
+        validate.message = "Comments must be at least 6 characters or be blank"
+        return validate;
+    }
     if( isNaN(price*1) || price.trim().length < 1 ){
         validate.message = 'Price must be a number'
         return validate;
@@ -35,7 +38,6 @@ export const validateAdd = ( name , phone , address , locality , price, frecuenc
         return validate;
     }
     if( frecuency.length > 1 && dweek.length > 1 && noWeek.length > 0){
-        console.log("hola");
         validate.message = 'Frequency, day of week and number of week must not be filled all at once'
         return validate;
     }

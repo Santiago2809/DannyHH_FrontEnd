@@ -16,8 +16,8 @@ import { addDBClient } from '../helpers/addDBClient';
 export const AddModalClient = () => {
 
     const isOpen = useSelector(state => state.ui.isAddOpenC);
+    const customers = useSelector(state => state.clients.clients);
     const dispatch = useDispatch();
-
 
     const [hour, setHour] = useState(new Date().setHours(8, 0));
     const [values, handleInputChange, reset] = useForm({
@@ -29,15 +29,17 @@ export const AddModalClient = () => {
         dweek: '',
         noWeek: '',
         category: 'full_time',
-        price: ''
+        comments: '',
+        price: '',
+        duration: 2
     })
 
-    const { name, phone, address, locality, frecuency, dweek, noWeek, category, price } = values;
+    const { name, phone, address, locality, frecuency, dweek, noWeek, category, price, comments, duration } = values;
 
     const checkCategory = () => {
-        if(category != 'full_time') return true
+        if (category != 'full_time') return true
     }
-    
+
     const onCloseModal = () => {
         dispatch(onCloseAddC());
         reset();
@@ -68,7 +70,7 @@ export const AddModalClient = () => {
         });
     }
 
-    const onHandleSubmit = (e) => {
+    const onHandleSubmit = async (e) => {
         e.preventDefault();
 
         //Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
@@ -77,22 +79,29 @@ export const AddModalClient = () => {
         // console.log({name, phone, address, locality, frecuency, finalHour, dweek, noWeek, category, price});
 
 
-        const result = validateAdd(name, phone, address, locality, price, frecuency, dweek, noWeek );
-        // const freq = ()
+        const result = validateAdd(name, phone, address, locality, price, frecuency, dweek, noWeek, comments);
 
-        if (result.type === 'error' ) {
+        if (result.type === 'error') {
             notifyError(result.message)
             return;
         } else {
-            const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price };
-            const id = (new Date().getTime());
-            addDBClient(client)
-            notifySuccess("Client saved")
+            const today = new Date();
+            const created = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
 
-            dispatch(addClients({ ...client, id }));
-            // addClient({ ...client, id });
-            dispatch(onCloseAddC());
-            reset();
+            const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price, comments, created, duration };
+
+            await addDBClient(client)
+                .then(() => {
+                    dispatch(addClients({ ...client, id: customers.at(-1).id + 1 }))
+                    notifySuccess("Client saved")
+                })
+                .catch(() => {
+                    notifyError("Ups! There was a problem saving the client")
+                })
+                .finally(() => {
+                    onCloseModal();
+                });
+            
         }
 
     }
@@ -180,12 +189,17 @@ export const AddModalClient = () => {
                             </select>
                         </div>
                         <div className='col-12 mt-2'>
+                            <label htmlFor="forTextArea">Comments:</label>
+                            <textarea className='form-control' placeholder='Some comments here....' id='forTextArea' name="comments" onChange={handleInputChange} value={comments} rows={2} style={{ resize: "none" }}></textarea>
+                        </div>
+                        <div className='col-12 mt-2'>
                             <label className='form-label'>Frecuency: </label>
                             <select onChange={handleInputChange} name='frecuency' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="monthly" className='optionn'>Monthly</option>
-                                <option value="every_two_weeks" className='optionn'>Every two weeks</option>
-                                <option value="every_three_weeks" className='optionn'>Every three weeks</option>
+                                <option value="every_week" className='optionn'>Every week</option>
+                                <option value="every_two_weeks" className='optionn'>Every 2 weeks</option>
+                                <option value="every_three_weeks" className='optionn'>Every 3 weeks</option>
                             </select>
                         </div>
                     </div>
