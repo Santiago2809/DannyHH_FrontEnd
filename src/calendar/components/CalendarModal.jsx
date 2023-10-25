@@ -97,14 +97,14 @@ export const CalendarModal = () => {
             }
             console.log(finalValues)
             return
-            await addEvent(finalValues)
-                .then(() => {
-                    notifySuccess("Saved Date")
-                    onCloseModal()
-                })
-                .catch(() => {
-                    notifyError("Ups! Something went wrong");
-                })
+            // await addEvent(finalValues)
+            //     .then(() => {
+            //         notifySuccess("Saved Date")
+            //         onCloseModal()
+            //     })
+            //     .catch(() => {
+            //         notifyError("Ups! Something went wrong");
+            //     })
             // dispatch(onAddCloseCal());
         }
     }
