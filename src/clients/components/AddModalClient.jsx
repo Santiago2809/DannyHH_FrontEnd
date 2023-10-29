@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { validateAdd } from '../index';
 import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
-import { fromUnixTime, millisecondsToSeconds } from 'date-fns';
+import { addDays, fromUnixTime, millisecondsToSeconds } from 'date-fns';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addClients, onCloseAddC } from '../../store';
 import { customStyles } from '../../helpers';
 import { addDBClient } from '../helpers/addDBClient';
+import { days_of_week } from '../../types';
 
 
 export const AddModalClient = () => {
@@ -20,6 +21,7 @@ export const AddModalClient = () => {
     const dispatch = useDispatch();
 
     const [hour, setHour] = useState(new Date().setHours(8, 0));
+    const [changeCreated, setChangeCreated] = useState(new Date().setHours(8,0));
     const [values, handleInputChange, reset] = useForm({
         name: '',
         phone: '',
@@ -70,6 +72,15 @@ export const AddModalClient = () => {
         });
     }
 
+    const checkDate = (date) => {
+        if (date.getDay() == days_of_week.indexOf(values.dweek)){
+            console.log('eeee son iguales very good')
+            setChangeCreated(date);
+        } else {
+            notifyError("Date must be in the same day of the week as specified")
+        }
+    }
+
     const onHandleSubmit = async (e) => {
         e.preventDefault();
 
@@ -85,8 +96,17 @@ export const AddModalClient = () => {
             notifyError(result.message)
             return;
         } else {
-            const today = new Date();
-            const created = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+            // const today = new Date();
+
+            let firstDate = new Date();
+            if(dweek.trim() != ''){
+                if( changeCreated.getDay() === 0){
+                    firstDate = addDays(changeCreated, days_of_week.indexOf(dweek));
+                } else if (changeCreated.getDay() === 6){
+                    firstDate = addDays(changeCreated, days_of_week.indexOf(dweek) + 1 );
+                }
+            }
+            const created = `${firstDate.getFullYear()}-${firstDate.getMonth() + 1}-${firstDate.getDate()}`;
 
             const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price, comments, created, duration };
 
@@ -121,27 +141,27 @@ export const AddModalClient = () => {
                 <form className='p-2' onSubmit={onHandleSubmit} autoComplete='off'>
                     <div className='mb-3 row'>
                         <div className='col-6'>
-                            <label className='form-label'>Name:</label>
+                            <label className='form-label fw-bold'>Name:</label>
                             <input value={name} onChange={handleInputChange} name='name' type="text" className='form-control' placeholder='client name' />
                         </div>
                         <div className='col-6'>
-                            <label className='form-label'>Phone: </label>
+                            <label className='form-label fw-bold'>Phone: </label>
                             <input value={phone} onChange={handleInputChange} name='phone' type="text" className='form-control' placeholder='client phone' />
                         </div>
                     </div>
                     <div className='mb-3 row'>
                         <div className='col-6'>
-                            <label className='form-label col-2 col-form-label'>Address: </label>
+                            <label className='form-label fw-bold col-2 col-form-label'>Address: </label>
                             <input value={address} onChange={handleInputChange} name='address' type="text" className='form-control' placeholder='client direction' />
                         </div>
                         <div className='col-6'>
-                            <label className='form-label'>Locality:</label>
+                            <label className='form-label fw-bold'>Locality:</label>
                             <input value={locality} onChange={handleInputChange} name='locality' type="text" className='form-control' placeholder='client locality' />
                         </div>
                     </div>
                     <div className='mb-3 row'>
                         <div className='col-6'>
-                            <label className='form-label'>Day of the week:</label>
+                            <label className='form-label fw-bold'>Day of the week:</label>
                             <select onChange={handleInputChange} name='dweek' className='form-select' disabled={checkCategory()}>
                                 <option value="" className='optionn'>--Not Selected--</option>
                                 <option value="monday" className='optionn'>Monday</option>
@@ -152,7 +172,7 @@ export const AddModalClient = () => {
                             </select>
                         </div>
                         <div className='col-6'>
-                            <label className='form-label '>No. of week: </label>
+                            <label className='form-label fw-bold'>No. of week: </label>
                             <select onChange={handleInputChange} name='noWeek' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="1" className='optionn'>1</option>
@@ -164,7 +184,7 @@ export const AddModalClient = () => {
                     </div>
                     <div className="mb-3 row">
                         <div className='col-6'>
-                            <label className='form-label '>Hour: </label>
+                            <label className='form-label fw-bold'>Hour: </label>
                             <ReactDatePicker
                                 selected={hour}
                                 className='form-control'
@@ -181,7 +201,7 @@ export const AddModalClient = () => {
                             {/* <input value={hour} onChange={handleInputChange} name='hour' type="text" className='form-control' placeholder='hour'/>     */}
                         </div>
                         <div className='col-6'>
-                            <label>Duration:</label>
+                            <label className='form-label fw-bold'>Duration:</label>
                             <select onChange={handleInputChange} name='duration' className='form-select mt-2' disabled={checkCategory()}>
                                 <option value="2" className='optionn'>2</option>
                                 <option value="1" className='optionn'>1</option>
@@ -189,11 +209,11 @@ export const AddModalClient = () => {
                             </select>
                         </div>
                         <div className='col-12 mt-2'>
-                            <label htmlFor="forTextArea">Comments:</label>
+                            <label htmlFor="forTextArea" className='form-label fw-bold'>Comments:</label>
                             <textarea className='form-control' placeholder='Some comments here....' id='forTextArea' name="comments" onChange={handleInputChange} value={comments} rows={2} style={{ resize: "none" }}></textarea>
                         </div>
                         <div className='col-12 mt-2'>
-                            <label className='form-label'>Frecuency: </label>
+                            <label className='form-label fw-bold'>Frecuency: </label>
                             <select onChange={handleInputChange} name='frecuency' className='form-select' disabled={checkCategory()}>
                                 <option value='' className='optionn'>--Not Selected--</option>
                                 <option value="monthly" className='optionn'>Monthly</option>
@@ -205,7 +225,7 @@ export const AddModalClient = () => {
                     </div>
                     <div className="mb-3 row">
                         <div className='col-6'>
-                            <label className='form-label '>Category: </label>
+                            <label className='form-label fw-bold'>Category: </label>
                             <select onChange={handleInputChange} name='category' className='form-select'>
                                 <option value="full_time" className='optionn'>Full time</option>
                                 <option value="ocasional" className='optionn'>Ocasional</option>
@@ -213,9 +233,26 @@ export const AddModalClient = () => {
                             </select>
                         </div>
                         <div className='col-6'>
-                            <label className='form-label '>Price: </label>
+                            <label className='form-label fw-bold'>Price: </label>
                             <input value={price} onChange={handleInputChange} name='price' type="text" className='form-control' placeholder='price' />
                         </div>
+                    </div>
+
+                    <div className='mb-2'>
+                        <label className='form-label fw-bold'>Choose first date:</label>
+                        <ReactDatePicker 
+                            selected={changeCreated}
+                            className='form-control'
+                            onChange={checkDate}
+                            minDate={addDays(new Date(),1)}
+                            // maxTime={new Date().setHours(14, 0)}
+                            // showTimeSelect
+                            // showTimeSelectOnly
+                            // timeIntervals={30}
+                            // timeCaption="Time"
+                            // dateFormat="h:mm aa"
+                            disabled={checkCategory()}
+                        />
                     </div>
 
                     <div className='d-flex justify-content-end mt-2'>

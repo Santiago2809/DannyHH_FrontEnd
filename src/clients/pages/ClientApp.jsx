@@ -36,35 +36,41 @@ export const ClientApp = () => {
                 </div>
             </div>
             <div className='clientTable mt-4'>
-                <table style={{ "width": "100%" }}>
+                <table style={{ "width": "100%" }} className='table table-striped table-hover table-bordered border-black'>
                     <thead>
                         <tr className="tableNames">
                             {
-                                headers.map(header => <th key={header} className='p-2'>{header}</th>)
+                                headers.map(header => <th key={header} scope='col' className='p-2 text-center'>{header}</th>)
                             }
                         </tr>
                     </thead>
-                    <tbody style={{ "color": "#fff" }}>
+                    <tbody style={{ "color": "#000" }} className='table-group-divider'>
                         {
-                            clients?.map(client => {
-                                const frequency = client.frequency != null ? client.frequency : "Not Available";
-                                const no_week = client.no_week != null ? client.no_week : "Not Available";
-                                const dweek = client.dweek != null ? client.dweek : "Not Available";
-                                return (
-                                    <tr key={client.id} id={client.id} onClick={onCustomerCLick} className='customer'>
-                                        <td className='tableElement p-2'>{client.name}</td>
-                                        <td className='tableElement p-2'>{client.phone}</td>
-                                        <td className='tableElement p-2'>{client.address}</td>
-                                        <td className='tableElement p-2'>{client.locality}</td>
-                                        <td className='tableElement p-2'>{frequency}</td>
-                                        <td className='tableElement p-2'>{client.hour}</td>
-                                        <td className='tableElement p-2'>{dweek}</td>
-                                        <td className='tableElement p-2'>{no_week}</td>
-                                        <td className='tableElement p-2'>{client.category}</td>
-                                        <td className='tableElement p-2'>{client.price}</td>
-                                    </tr>
-                                )
-                            })
+                            clients.length < 1 
+                            ?
+                                <tr>
+                                    <td colSpan={10} className='text-center fw-bold'>No hay clientes</td>
+                                </tr>
+                            :
+                                clients?.map(client => {
+                                        const frequency = client.frequency != null ? client.frequency : "Not Available";
+                                        const no_week = client.no_week != null ? client.no_week : "Not Available";
+                                        const dweek = client.dweek != null ? client.dweek : "Not Available";
+                                        return (
+                                            <tr key={client.id} id={client.id} onClick={onCustomerCLick} className='customer'>
+                                                <td className='tableElement p-2 text-center'>{client.name}</td>
+                                                <td className='tableElement p-2 text-center'>{client.phone}</td>
+                                                <td className='tableElement p-2 text-center'>{client.address}</td>
+                                                <td className='tableElement p-2 text-center'>{client.locality}</td>
+                                                <td className='tableElement p-2 text-center'>{frequency}</td>
+                                                <td className='tableElement p-2 text-center'>{client.hour}</td>
+                                                <td className='tableElement p-2 text-center'>{dweek}</td>
+                                                <td className='tableElement p-2 text-center'>{no_week}</td>
+                                                <td className='tableElement p-2 text-center'>{client.category}</td>
+                                                <td className='tableElement p-2 text-center'>{client.price}</td>
+                                            </tr>
+                                        )
+                                })
                         }
                     </tbody>
                 </table>

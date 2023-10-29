@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { onLogOut } from '../store';
+import { calendarLogout, clientLogout, onLogOut } from '../store';
 
 export const Navbar = () => {
 
@@ -21,6 +21,8 @@ export const Navbar = () => {
     const onLogout = () => {
         localStorage.setItem('auth', false);
         localStorage.removeItem('customers')
+        dispatch(calendarLogout())
+        dispatch(clientLogout())
         dispatch(onLogOut());
         navigate("/auth")
     }
