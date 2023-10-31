@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const headers = ["Name", "Phone", "Address", "Location", "Frecuency", "Time", "Day of Week", "No. of Week", "Category", "Price"]
 const frequencyNames = {monthly: "Monthly", every_week: "Every week", every_two_weeks: "Every two weeks", every_three_weeks: "Every three weeks", notA: "Not Available"}
-const categories = { full_time: "Full Time", snowbird: "Snowbird", ocasional: "Ocasional", na: "Not Available"}
+const categories = { full_time: "Full Time", snowbird: "Snowbird", ocasional: "Ocasional", NA: "Not Available"}
 
 export const ClientApp = () => {
 
