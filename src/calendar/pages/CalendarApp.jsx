@@ -17,12 +17,16 @@ export const CalendarApp = () => {
     const status = true;
     const dispatch = useDispatch();
     const calendarEvents = useSelector(state => state.calendar.events);
+    
+    //Se crea esta variable porque si se usa el lenght de calendarEvents en el useEffect truena
+    const len = calendarEvents.length;
+    const ocasionalDates = useSelector(state => state.calendar.ocasionalDates);
     const customers = useSelector(state => state.clients.clients);
     const isOpen = useSelector(state => state.ui.isAddOpenCal);
 
 
     useEffect(() => {
-        if (calendarEvents.length > 1) return
+        if (len > 1) return
         getEvents(customers)?.forEach(clientDates => {
             clientDates.forEach(event => {
                 events.push(event)
@@ -32,7 +36,14 @@ export const CalendarApp = () => {
         return () => {
             events = [];
         }
-    }, [customers, dispatch])
+    }, [customers, dispatch, ocasionalDates, len])
+
+    // useEffect(() => {
+    //     setOcasional(ocasionalDates).forEach( date => {
+    //         events.push(date)
+    //     })
+    //     dispatch(setEvents(events))
+    // },[dispatch, ocasionalDates])
 
     if (!status) {
         return <Navigate to="/auth" />
@@ -43,7 +54,6 @@ export const CalendarApp = () => {
     // }
 
     const onSelect = (event) => {
-
         dispatch(setActiveEvent({
             ...event,
             start: event.start.toString(),
@@ -78,7 +88,6 @@ export const CalendarApp = () => {
                 components={{
                     event: CalendarEvent
                 }}
-                // onDoubleClickEvent={ onDubleClick }
                 onSelectEvent={onSelect}
                 onSelectSlot={onSlot}
                 onView={onViewChange}

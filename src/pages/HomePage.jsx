@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { Navbar } from '../components'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { setClients } from '../store'
+import { onLoadC, onLoadedC, setClients, setOcasional } from '../store'
 import { getDbClients } from '../clients/helpers/getDBClients'
+import { getOcasionalDates } from '../calendar/helper/getOcasionalDates'
 import { useLayoutEffect } from 'react'
 
 export const HomePage = () => {
@@ -19,11 +20,18 @@ export const HomePage = () => {
     }, [isAuth, navigate])
 
     useLayoutEffect(() => {
+        dispatch(onLoadC())
         getDbClients().then(customers => {
             dispatch(setClients(customers))
-            // localStorage.setItem('customers', JSON.stringify(customers))
+            dispatch(onLoadedC())
         });
     }, [dispatch])
+
+    useLayoutEffect(() => {
+        getOcasionalDates().then( dates => {
+            dispatch(setOcasional(dates))
+        })
+    },[dispatch])
 
     return (
         <div>

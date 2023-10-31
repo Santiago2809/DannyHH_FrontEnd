@@ -17,7 +17,7 @@ export const getEvents = (customers = [] ) => {
 		const customerDate = new Date(numbers[0], numbers[1]-1, numbers[2] );
 
 		if ( !frequency ){
-			console.log(name);
+			// console.log(name);
 			//TODO: Desarrollar el algoritmo para calcular las fechas en base al numero de dia
 		} 
 		

@@ -16,7 +16,7 @@ export const EditModalClient = () => {
     const activeCustomer = useSelector(state => state.clients.activeCustomer);
     const { id, name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments, duration, created } = activeCustomer;
 
-    const days_of_week = ["sunday", "monday", "tuesday", "wednesday","thursday", "friday", "saturday"];
+    const days_of_week = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     const [hours, setHour] = useState(new Date().setHours(+hour.substring(0, hour.indexOf(':')), +hour.substring(hour.indexOf(':') + 1)));
     // const createdDate = created.split("-");
     const [changeCreated, setChangeCreated] = useState(new Date(created));
@@ -98,7 +98,7 @@ export const EditModalClient = () => {
             theme: "colored",
         });
     }
-    
+
     const twoCalls = (e) => {
         handleInputChange(e)
         if (changedValues.length > 0) {
@@ -111,11 +111,11 @@ export const EditModalClient = () => {
         }
     }
     const checkDate = (date) => {
-        if (date.getDay() == days_of_week.indexOf(values.dweek)){
+        if (date.getDay() == days_of_week.indexOf(values.dweek)) {
             setChangeCreated(date);
-        } else if (values.dweek == '' || date.getDay() != days_of_week.indexOf(values.dweek) ){
+        } else if (values.dweek == '' || date.getDay() != days_of_week.indexOf(values.dweek)) {
             notifyInfo("If day of week isnt not selected, first day will be monday")
-        }  else {
+        } else {
             notifyError("Date must be in the same day of the week as specified")
         }
     }
@@ -140,7 +140,7 @@ export const EditModalClient = () => {
         //Comprobar si se han editado los valores
         // console.log(compareActive)
         // console.log(editedCustomer)
-        if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer) && isSameDay(new Date(created),changeCreated)) return notifyError("Must be at leat 1 edited value")
+        if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer) && isSameDay(new Date(created), changeCreated)) return notifyError("Must be at leat 1 edited value")
         // console.log(changedValues)
 
 
@@ -148,16 +148,16 @@ export const EditModalClient = () => {
         const formatHour = (typeof hours === 'number') ? fromUnixTime(millisecondsToSeconds(hours)) : hours;
         // eslint-disable-next-line no-unused-vars
         const finalHour = `${formatHour.getHours()}:${formatHour.getMinutes() == "0" ? "00" : formatHour.getMinutes()}`;
-        
+
         //Validaciones necesarias
-        if((editedCustomer.dweek != null && editedCustomer.no_week != null && editedCustomer.frequency != null)){
+        if ((editedCustomer.dweek != null && editedCustomer.no_week != null && editedCustomer.frequency != null)) {
             notifyError("Frequency, day of week and number of week cant be filled at the same time")
             return
-        } else if(editedCustomer.frequency != null && editedCustomer.no_week != null && editedCustomer.dweek === null){
+        } else if (editedCustomer.frequency != null && editedCustomer.no_week != null && editedCustomer.dweek === null) {
             notifyError("Frequency and number of week must not be filled at the same time")
             return
         }
-        
+
         let finalValues = changedValues.includes('hour') ? { hour: finalHour } : {};
         changedValues.forEach((elem) => {
             if (elem == 'hour') return
@@ -188,7 +188,7 @@ export const EditModalClient = () => {
                 frequency: null
             }
         }
-        if(!isSameDay(new Date(created),changeCreated)){
+        if (!isSameDay(new Date(created), changeCreated)) {
             const newCreated = `${changeCreated.getFullYear()}-${changeCreated.getMonth() + 1}-${changeCreated.getDate()}`
             finalValues = {
                 ...finalValues,
@@ -200,7 +200,7 @@ export const EditModalClient = () => {
         await editClient(id, finalValues)
             .then(() => {
                 notifySuccess("Customer edited successfully");
-                dispatch(editClients({id, finalValues}))
+                dispatch(editClients({ id, finalValues }))
                 onCloseModal();
             })
             .catch(() => {
@@ -312,11 +312,11 @@ export const EditModalClient = () => {
 
                     <div className='mb-2'>
                         <label className='form-label fw-bold'>Choose first date:</label>
-                        <ReactDatePicker 
+                        <ReactDatePicker
                             selected={changeCreated}
                             className='form-control'
                             onChange={checkDate}
-                            minDate={addDays(new Date(),1)}
+                            minDate={addDays(new Date(), 1)}
                             // maxTime={new Date().setHours(14, 0)}
                             // showTimeSelect
                             // showTimeSelectOnly

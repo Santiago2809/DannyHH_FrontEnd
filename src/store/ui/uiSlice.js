@@ -4,6 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const uiSlice = createSlice({
     name: 'ui',
     initialState: {
+        loadingC: false,
+
         isAddOpenCal: false,
 
         isAddOpenC: false,
@@ -17,6 +19,13 @@ export const uiSlice = createSlice({
         isOpenEvent: false,
     },
     reducers: {
+        ///Loading customers
+        onLoadC: (state) => {
+            state.loadingC = true;
+        },
+        onLoadedC: (state) => {
+            state.loadingC = false;
+        },
         ////Calendar
         onAddOpenCal: (state) => {
             state.isAddOpenCal = true;
@@ -72,4 +81,4 @@ export const uiSlice = createSlice({
     }
 })
 
-export const { onAddOpenCal, onAddCloseCal, onCloseAddC, onCloseDelC, onCloseEditC, onOpenAddC, onOpenDelC, onOpenEditC, onOpenAddT, onCloseAddT, onOpenEditT, onCloseEditT, onOpenDelT, onCloseDelT, onOpenEvent, onCloseEvent } = uiSlice.actions;
+export const { onLoadC, onLoadedC, onAddOpenCal, onAddCloseCal, onCloseAddC, onCloseDelC, onCloseEditC, onOpenAddC, onOpenDelC, onOpenEditC, onOpenAddT, onCloseAddT, onOpenEditT, onCloseEditT, onOpenDelT, onCloseDelT, onOpenEvent, onCloseEvent } = uiSlice.actions;

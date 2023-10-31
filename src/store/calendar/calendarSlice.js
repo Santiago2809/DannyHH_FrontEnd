@@ -3,18 +3,25 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const calendarSlice = createSlice({
     name: 'calendar',
-    initialState:{
+    initialState: {
         events: [],
-        activeEvent: {}
+        activeEvent: {},
+        ocasionalDates: []
     },
     reducers: {
-        setEvents: (state, { payload } ) => {
+        setEvents: (state, { payload }) => {
             state.events = payload
         },
-        delEvents: ( state ) => {
+        delEvents: (state) => {
             state.events = []
         },
-        setActiveEvent: ( state, { payload } ) => {
+        setOcasional: (state, { payload }) => {
+            state.ocasionalDates = payload
+        },
+        delOcasional: (state) => {
+            state.ocasionalDates = []
+        },
+        setActiveEvent: (state, { payload }) => {
             state.activeEvent = payload;
         },
         delActiveEvent: (state) => {
@@ -27,4 +34,4 @@ export const calendarSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setActiveEvent,delEvents, delActiveEvent, setEvents, calendarLogout } = calendarSlice.actions;
+export const { setActiveEvent, delEvents, setOcasional, delOcasional, delActiveEvent, setEvents, calendarLogout } = calendarSlice.actions;
