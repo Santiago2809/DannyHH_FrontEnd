@@ -12,6 +12,7 @@ import { editClient } from '../helpers/editClient';
 export const EditModalClient = () => {
 
     const dispatch = useDispatch();
+    const [disabledButton, setDisabledButton] = useState(false);
     const isOpen = useSelector(state => state.ui.isEditOpenC);
     const activeCustomer = useSelector(state => state.clients.activeCustomer);
     const { id, name, phone, address, locality, frequency, hour, dweek, no_week, category, price, comments, duration, created } = activeCustomer;
@@ -122,6 +123,7 @@ export const EditModalClient = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setDisabledButton(true)
         // eslint-disable-next-line no-unused-vars
         const compareActive = (({ id, created, ...obj }) => obj)(activeCustomer)
         const categories = ["ocasional", "snowbird", "NA"]
@@ -201,6 +203,7 @@ export const EditModalClient = () => {
             .then(() => {
                 notifySuccess("Customer edited successfully");
                 dispatch(editClients({ id, finalValues }))
+                setDisabledButton(false);
                 onCloseModal();
             })
             .catch(() => {
@@ -328,7 +331,7 @@ export const EditModalClient = () => {
                     </div>
 
                     <div className='d-flex justify-content-center mt-3'>
-                        <button className='btn btn-warning'>Edit Customer</button>
+                        <button className='btn btn-warning' disabled={disabledButton}>Edit Customer</button>
                     </div>
                 </form>
             </Modal>

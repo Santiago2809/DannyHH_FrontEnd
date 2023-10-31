@@ -19,9 +19,10 @@ export const AddModalClient = () => {
     const isOpen = useSelector(state => state.ui.isAddOpenC);
     const customers = useSelector(state => state.clients.clients);
     const dispatch = useDispatch();
+    const [disabledButton, setDisabledButton] = useState(false);
 
     const [hour, setHour] = useState(new Date().setHours(8, 0));
-    const [changeCreated, setChangeCreated] = useState(new Date().setHours(8,0));
+    const [changeCreated, setChangeCreated] = useState(new Date());
     const [values, handleInputChange, reset] = useForm({
         name: '',
         phone: '',
@@ -83,7 +84,7 @@ export const AddModalClient = () => {
 
     const onHandleSubmit = async (e) => {
         e.preventDefault();
-
+        setDisabledButton(true)
         //Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
         const formatHour = (typeof hour === 'number') ? fromUnixTime(millisecondsToSeconds(hour)) : hour;
         const finalHour = `${formatHour.getHours()}:${formatHour.getMinutes() == "0" ? "00" : formatHour.getMinutes()}`;
@@ -110,6 +111,7 @@ export const AddModalClient = () => {
 
             const client = { name, phone, address, locality, frequency: frecuency, hour: finalHour, dweek, no_week: noWeek, category, price, comments, created, duration };
 
+
             await addDBClient(client)
                 .then(() => {
                     dispatch(addClients({ ...client, id: customers.at(-1).id + 1 }))
@@ -119,6 +121,7 @@ export const AddModalClient = () => {
                     notifyError("Ups! There was a problem saving the client")
                 })
                 .finally(() => {
+                    setDisabledButton(false);
                     onCloseModal();
                 });
             
@@ -256,7 +259,7 @@ export const AddModalClient = () => {
                     </div>
 
                     <div className='d-flex justify-content-end mt-2'>
-                        <button className='btn btn-primary w-50'>
+                        <button className='btn btn-primary w-50' disabled={disabledButton}>
                             Add
                         </button>
                     </div>
