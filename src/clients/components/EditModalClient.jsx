@@ -197,6 +197,7 @@ export const EditModalClient = () => {
                 frequency: null
             }
         }
+
         if (!isSameDay(new Date(created), changeCreated)) {
             const newCreated = `${changeCreated.getFullYear()}-${changeCreated.getMonth() + 1}-${changeCreated.getDate()}`
             finalValues = {
