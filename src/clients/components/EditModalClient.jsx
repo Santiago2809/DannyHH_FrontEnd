@@ -5,7 +5,7 @@ import { customStyles } from '../../helpers';
 import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
 import { useState } from 'react';
-import { addDays, fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
+import { fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
 import { toast } from 'react-toastify';
 import { editClient } from '../helpers/editClient';
 
@@ -319,7 +319,7 @@ export const EditModalClient = () => {
                             selected={changeCreated}
                             className='form-control'
                             onChange={checkDate}
-                            minDate={addDays(new Date(), 1)}
+                            // minDate={addDays(new Date(), 1)}
                             // maxTime={new Date().setHours(14, 0)}
                             // showTimeSelect
                             // showTimeSelectOnly
