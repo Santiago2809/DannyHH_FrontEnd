@@ -132,7 +132,7 @@ export const EditModalClient = () => {
         let editedCustomer = {
             ...values,
             price: +values.price,
-            frequency: values.frequency === "" || categories.includes(values.category) ? null : values.frequency,
+            frequency: (values.frequency === "" || categories.includes(values.category)) ? null : values.frequency,
             dweek: values.dweek === "" ? null : values.dweek,
             no_week: values.no_week === "" || values.no_week === null ? null : +values.no_week,
             comments: values.comments === "" ? null : values.comments
@@ -177,6 +177,12 @@ export const EditModalClient = () => {
                 duration: +finalValues.duration
             }
         }
+        if (finalValues.no_week != undefined) {
+            finalValues = {
+                ...finalValues,
+                no_week: finalValues.no_week == "" ? null : finalValues.no_week
+            }
+        }
         if (finalValues.price != undefined) {
             finalValues = {
                 ...finalValues,
@@ -198,8 +204,6 @@ export const EditModalClient = () => {
                 created: newCreated
             }
         }
-
-        // console.log(finalValues)
         await editClient(id, finalValues)
             .then(() => {
                 notifySuccess("Customer edited successfully");
