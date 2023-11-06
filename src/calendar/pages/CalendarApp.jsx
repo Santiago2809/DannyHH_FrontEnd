@@ -20,7 +20,7 @@ export const CalendarApp = () => {
     
     //Se crea esta variable porque si se usa el lenght de calendarEvents en el useEffect truena
     const len = calendarEvents.length;
-    const ocasionalDates = useSelector(state => state.calendar.ocasionalDates);
+    // const ocasionalDates = useSelector(state => state.calendar.ocasionalDates);
     const customers = useSelector(state => state.clients.clients);
     const isOpen = useSelector(state => state.ui.isAddOpenCal);
 
@@ -36,7 +36,7 @@ export const CalendarApp = () => {
         return () => {
             events = [];
         }
-    }, [customers, dispatch, ocasionalDates, len])
+    }, [customers, dispatch, len])
 
     // useEffect(() => {
     //     setOcasional(ocasionalDates).forEach( date => {

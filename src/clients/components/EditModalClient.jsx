@@ -87,6 +87,7 @@ export const EditModalClient = () => {
         });
     }
 
+    // eslint-disable-next-line no-unused-vars
     const notifyInfo = (message) => {
         return toast.info(message, {
             position: "top-center",
@@ -114,8 +115,8 @@ export const EditModalClient = () => {
     const checkDate = (date) => {
         if (date.getDay() == days_of_week.indexOf(values.dweek)) {
             setChangeCreated(date);
-        } else if (values.dweek == '' || date.getDay() != days_of_week.indexOf(values.dweek)) {
-            notifyInfo("If day of week isnt not selected, first day will be monday")
+        } else if (values.dweek == null || values.dweek == '') {
+            notifyError("Day of week must be specified")
         } else {
             notifyError("Date must be in the same day of the week as specified")
         }
