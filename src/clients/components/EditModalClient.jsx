@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { delActiveCustomer, editClients, onCloseEditC } from '../../store';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
 import { useState } from 'react';
@@ -19,8 +19,14 @@ export const EditModalClient = () => {
 
     const days_of_week = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     const [hours, setHour] = useState(new Date().setHours(+hour.substring(0, hour.indexOf(':')), +hour.substring(hour.indexOf(':') + 1)));
-    // const createdDate = created.split("-");
-    const [changeCreated, setChangeCreated] = useState(new Date(created));
+    
+    //* Se crea el arreglo que separa la fecha y se crea una nueva fecha, esto debido a que a veces puede fallar el datepicker.
+    const createdValues = created.split("-");
+    const createdDate = new Date();
+    createdDate.setFullYear(createdValues[0],createdValues[1]-1,createdValues[2]);
+    //*---------------------------------------------------------------------------
+    
+    const [changeCreated, setChangeCreated] = useState(createdDate);
     const [changedValues, setChangedValues] = useState([])
     const [values, handleInputChange] = useForm({
         name,
@@ -40,7 +46,7 @@ export const EditModalClient = () => {
 
 
     const checkCategory = () => {
-        if (values.category != 'full_time' && values.category != "NA") return true
+        if (values.category != 'full_time') return true
     }
 
     const onHourChange = (date) => {
@@ -61,31 +67,6 @@ export const EditModalClient = () => {
         dispatch(onCloseEditC());
     }
 
-
-    const notifyError = (message) => {
-        return toast.error(message, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
-    const notifySuccess = (message) => {
-        return toast.success(message, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
 
     // eslint-disable-next-line no-unused-vars
     const notifyInfo = (message) => {
@@ -180,7 +161,7 @@ export const EditModalClient = () => {
         if (finalValues.no_week != undefined) {
             finalValues = {
                 ...finalValues,
-                no_week: finalValues.no_week == "" ? null : finalValues.no_week
+                no_week: finalValues.no_week == "" ? null : +finalValues.no_week
             }
         }
         if (finalValues.price != undefined) {
@@ -213,10 +194,11 @@ export const EditModalClient = () => {
                 onCloseModal();
             })
             .catch(() => {
+                console.log(finalValues)
                 notifyError("Ups! Something gone wrong")
+                setDisabledButton(false);
             })
     }
-
     return (
         <div>
             <Modal
@@ -299,6 +281,7 @@ export const EditModalClient = () => {
                             <option value="2" className='optionn'>2</option>
                             <option value="3" className='optionn'>3</option>
                             <option value="4" className='optionn'>4</option>
+                            <option value="-1" className='optionn'>Last</option>
                         </select>
                     </div>
                     <div className='mb-2'>

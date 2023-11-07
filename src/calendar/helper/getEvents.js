@@ -1,4 +1,4 @@
-import { addHours, addWeeks } from "date-fns";
+import { addDays, addHours, addMonths, addWeeks } from "date-fns";
 
 export const getEvents = (customers = [] ) => {
 	// const customers = JSON.parse(localStorage.getItem('customers'));
@@ -33,13 +33,17 @@ export const getEvents = (customers = [] ) => {
 			price
 		})
 
-		//Con este if se decide si el cliente tiene un dia del mes asignado o es por frecuencia
+		//* Con este if se decide si el cliente tiene un dia del mes asignado o es por frecuencia
 		if ( !frequency ){
 
 			let nextDate = firstDate;
+
 			for(let i = 0; i < 18; i++){
-				nextDate.setMonth(nextDate.getMonth() < 11 ? (nextDate.getMonth() + 1,1) : 0);
+				nextDate = addMonths(nextDate,1);
+				nextDate.setDate(1);
+
 				if(nextDate.getDay() == daysWeek.indexOf(dweek)){
+
 					const startDate = addWeeks(nextDate,no_week-1);
 					dates.push({
 						id,
@@ -51,12 +55,41 @@ export const getEvents = (customers = [] ) => {
 						locality,
 						price
 					})
+					nextDate = startDate;
+				} else if( nextDate.getDay() > daysWeek.indexOf(dweek) ) {
+					nextDate = addDays(nextDate, 7 - (nextDate.getDay() - daysWeek.indexOf(dweek)));
+					const startDate = addWeeks(nextDate,no_week-1);
+					dates.push({
+						id,
+						title: name,
+						start: startDate,
+						end: addHours(startDate, duration ),
+						phone,
+						address,
+						locality,
+						price
+					})
+					nextDate = startDate;
+				} else {
+					nextDate = addDays(nextDate, ( daysWeek.indexOf(dweek) - nextDate.getDate() ));
+					const startDate = addWeeks(nextDate,no_week-1);
+					dates.push({
+						id,
+						title: name,
+						start: startDate,
+						end: addHours(startDate, duration ),
+						phone,
+						address,
+						locality,
+						price
+					})
+					nextDate = startDate;
 				}
 			}
 		} else {
-			//En lo siguiente se calcula cuantos dias se añadiran para la primera limpieza, en base a que dia es la creacion
+			//En lo siguiente se calcula cuantos dias se añadir an para la primera limpieza, en base a que dia es la creacion
 			//Se crea un ciclo para generar fechas del cliente
-			for(let i = 0; i <= 50; i++){
+			for(let i = 0; i <= 20; i++){
 				if( frequency ){
 					switch (frequency){
 						case 'monthly':{
