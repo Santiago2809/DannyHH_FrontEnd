@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { base_url } from '../../types';
 
+
+
 export const editClient = async(id, customer = {}) => {
     
     try {
@@ -15,6 +17,8 @@ export const editClient = async(id, customer = {}) => {
         return res;
     }catch(err){
         console.log(err);
+        return Promise.reject(err);
+        // notifyError("Ups! Something gone wrong")
     }
 
 }

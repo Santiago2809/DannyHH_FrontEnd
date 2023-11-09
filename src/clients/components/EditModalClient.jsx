@@ -1,11 +1,11 @@
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { delActiveCustomer, editClients, onCloseEditC } from '../../store';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
 import { useState } from 'react';
-import { addDays, fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
+import { fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
 import { toast } from 'react-toastify';
 import { editClient } from '../helpers/editClient';
 
@@ -19,8 +19,14 @@ export const EditModalClient = () => {
 
     const days_of_week = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     const [hours, setHour] = useState(new Date().setHours(+hour.substring(0, hour.indexOf(':')), +hour.substring(hour.indexOf(':') + 1)));
-    // const createdDate = created.split("-");
-    const [changeCreated, setChangeCreated] = useState(new Date(created));
+    
+    //* Se crea el arreglo que separa la fecha y se crea una nueva fecha, esto debido a que a veces puede fallar el datepicker.
+    const createdValues = created.split("-");
+    const createdDate = new Date();
+    createdDate.setFullYear(createdValues[0],createdValues[1]-1,createdValues[2]);
+    //*---------------------------------------------------------------------------
+    
+    const [changeCreated, setChangeCreated] = useState(createdDate);
     const [changedValues, setChangedValues] = useState([])
     const [values, handleInputChange] = useForm({
         name,
@@ -40,7 +46,7 @@ export const EditModalClient = () => {
 
 
     const checkCategory = () => {
-        if (values.category != 'full_time' && values.category != "NA") return true
+        if (values.category != 'full_time') return true
     }
 
     const onHourChange = (date) => {
@@ -62,31 +68,7 @@ export const EditModalClient = () => {
     }
 
 
-    const notifyError = (message) => {
-        return toast.error(message, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
-    const notifySuccess = (message) => {
-        return toast.success(message, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
-
+    // eslint-disable-next-line no-unused-vars
     const notifyInfo = (message) => {
         return toast.info(message, {
             position: "top-center",
@@ -114,8 +96,8 @@ export const EditModalClient = () => {
     const checkDate = (date) => {
         if (date.getDay() == days_of_week.indexOf(values.dweek)) {
             setChangeCreated(date);
-        } else if (values.dweek == '' || date.getDay() != days_of_week.indexOf(values.dweek)) {
-            notifyInfo("If day of week isnt not selected, first day will be monday")
+        } else if (values.dweek == null || values.dweek == '') {
+            notifyError("Day of week must be specified")
         } else {
             notifyError("Date must be in the same day of the week as specified")
         }
@@ -131,7 +113,7 @@ export const EditModalClient = () => {
         let editedCustomer = {
             ...values,
             price: +values.price,
-            frequency: values.frequency === "" || categories.includes(values.category) ? null : values.frequency,
+            frequency: (values.frequency === "" || categories.includes(values.category)) ? null : values.frequency,
             dweek: values.dweek === "" ? null : values.dweek,
             no_week: values.no_week === "" || values.no_week === null ? null : +values.no_week,
             comments: values.comments === "" ? null : values.comments
@@ -176,6 +158,12 @@ export const EditModalClient = () => {
                 duration: +finalValues.duration
             }
         }
+        if (finalValues.no_week != undefined) {
+            finalValues = {
+                ...finalValues,
+                no_week: finalValues.no_week == "" ? null : +finalValues.no_week
+            }
+        }
         if (finalValues.price != undefined) {
             finalValues = {
                 ...finalValues,
@@ -190,6 +178,7 @@ export const EditModalClient = () => {
                 frequency: null
             }
         }
+
         if (!isSameDay(new Date(created), changeCreated)) {
             const newCreated = `${changeCreated.getFullYear()}-${changeCreated.getMonth() + 1}-${changeCreated.getDate()}`
             finalValues = {
@@ -197,8 +186,6 @@ export const EditModalClient = () => {
                 created: newCreated
             }
         }
-
-        // console.log(finalValues)
         await editClient(id, finalValues)
             .then(() => {
                 notifySuccess("Customer edited successfully");
@@ -207,10 +194,11 @@ export const EditModalClient = () => {
                 onCloseModal();
             })
             .catch(() => {
+                console.log(finalValues)
                 notifyError("Ups! Something gone wrong")
+                setDisabledButton(false);
             })
     }
-
     return (
         <div>
             <Modal
@@ -293,6 +281,7 @@ export const EditModalClient = () => {
                             <option value="2" className='optionn'>2</option>
                             <option value="3" className='optionn'>3</option>
                             <option value="4" className='optionn'>4</option>
+                            <option value="-1" className='optionn'>Last</option>
                         </select>
                     </div>
                     <div className='mb-2'>
@@ -319,7 +308,7 @@ export const EditModalClient = () => {
                             selected={changeCreated}
                             className='form-control'
                             onChange={checkDate}
-                            minDate={addDays(new Date(), 1)}
+                            // minDate={addDays(new Date(), 1)}
                             // maxTime={new Date().setHours(14, 0)}
                             // showTimeSelect
                             // showTimeSelectOnly
