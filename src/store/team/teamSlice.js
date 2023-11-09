@@ -3,11 +3,27 @@ import { createSlice } from '@reduxjs/toolkit'
 export const teamSlice = createSlice({
     name: 'team',
     initialState:{
-        members: [],
+        members: [{
+            id: crypto.randomUUID(),
+            name: "Laura",
+            phone: "6622575297"
+        },
+        {
+            id: crypto.randomUUID(),
+            name: "Rosita",
+            phone: "6625418596"
+        }],
+        activeTeammate: {}
     },
     reducers: {
         setMembers: (state, { payload} ) => {
             state.members = payload;
+        },
+        setActiveTeammate: ( state, { payload }) => {
+            state.activeTeammate = state.members.find(team => team.id == payload);
+        },
+        delActiveTeammate: ( state ) => {
+            state.activeTeammate = {};
         },
         addMember: (state, { payload }) => {
             state.members.push(payload);
@@ -32,4 +48,4 @@ export const teamSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setMembers, addMember, delMember, editMember, membersLogout } = teamSlice.actions;
+export const { setMembers, setActiveTeammate, delActiveTeammate, addMember, delMember, editMember, membersLogout } = teamSlice.actions;

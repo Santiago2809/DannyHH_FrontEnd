@@ -4,19 +4,6 @@ import { customStyles } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 
-const team = [
-    {
-        id: crypto.randomUUID(),
-        name: "Laura",
-        phone: "6622575297"
-    },
-    {
-        id: crypto.randomUUID(),
-        name: "Rosita",
-        phone: "6625418596"
-    }
-]
-
 
 export const EventModal = () => {
 
@@ -24,6 +11,7 @@ export const EventModal = () => {
     const dispatch = useDispatch();
     const isOpen = useSelector(state => state.ui.isOpenEvent);
     const activeEvent = useSelector(state => state.calendar.activeEvent);
+    const team = useSelector( state => state.team.members)
     // const team = useSelector(state => state.team.members);
 
     const { title, address, end, locality, price, start, phone } = activeEvent;

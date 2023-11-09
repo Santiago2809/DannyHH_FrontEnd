@@ -6,7 +6,6 @@ import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
 import { useState } from 'react';
 import { fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
-import { toast } from 'react-toastify';
 import { editClient } from '../helpers/editClient';
 
 export const EditModalClient = () => {
@@ -65,21 +64,6 @@ export const EditModalClient = () => {
     const onCloseModal = () => {
         dispatch(delActiveCustomer());
         dispatch(onCloseEditC());
-    }
-
-
-    // eslint-disable-next-line no-unused-vars
-    const notifyInfo = (message) => {
-        return toast.info(message, {
-            position: "top-center",
-            autoClose: 2500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     }
 
     const twoCalls = (e) => {

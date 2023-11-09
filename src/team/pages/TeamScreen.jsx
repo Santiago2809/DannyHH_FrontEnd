@@ -1,25 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { onOpenAddT, onOpenDelT, onOpenEditT } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { onOpenAddT, onOpenDelT, onOpenEditT, setActiveTeammate } from '../../store';
 import { AddModalTeam, DeleteModalTeam, EditModalTeam } from '..';
 
 const headers = ["Name", "Phone"]
 
-const team = [
-    {
-        id: crypto.randomUUID(),
-        name: "Laura",
-        phone: "6622575297"
-    },
-    {
-        id: crypto.randomUUID(),
-        name: "Rosita",
-        phone: "6625418596"
-    }
-]
 
 export const TeamScreen = () => {
 
     const dispatch = useDispatch();
+    const { isAddOpenT, isEditOpenT, isDelOpenT } = useSelector( state => state.ui)
+    const team = useSelector( state => state.team.members );
 
 
     const onAddOpen = () => {
@@ -28,7 +18,8 @@ export const TeamScreen = () => {
     const onDelOpen = () => {
         dispatch(onOpenDelT());
     };
-    const onEditOpen = () => {
+    const onEditOpen = ({target}) => {
+        dispatch(setActiveTeammate(target.parentElement.id))
         dispatch(onOpenEditT());
     };
 
@@ -59,7 +50,7 @@ export const TeamScreen = () => {
                         {
                             team?.map(member => {
                                 return (
-                                    <tr key={member.id} onClick={onEditOpen} style={{ cursor: 'pointer' }}>
+                                    <tr key={member.id} id={member.id} onClick={onEditOpen} style={{ cursor: 'pointer' }}>
                                         <td className='tableElement p-2'>{member.name}</td>
                                         <td className='tableElement p-2'>{member.phone}</td>
                                     </tr>
@@ -75,9 +66,15 @@ export const TeamScreen = () => {
                     </div>
                 }
             </div>
-            <AddModalTeam />
-            <EditModalTeam />
-            <DeleteModalTeam />
+            {
+                isAddOpenT && <AddModalTeam />
+            }
+            {
+                isEditOpenT && <EditModalTeam />
+            }
+            {
+                isDelOpenT && <DeleteModalTeam />
+            }
         </div>
     )
 }

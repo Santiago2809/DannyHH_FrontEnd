@@ -1,33 +1,36 @@
-import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { onCloseEditT } from '../../store';
+import { delActiveTeammate, editMember, onCloseEditT } from '../../store';
 import { customStyles } from '../../helpers';
+import { useForm } from '../../hooks/useForm';
+import { useState } from 'react';
 
 export const EditModalTeam = () => {
 
     const dispatch = useDispatch();
+    const [disabled, setDisabled] = useState(false);
     const isOpen = useSelector( state => state.ui.isEditOpenT );
-    // const [clients, setClients] = useState( useSelector( state => state.clients.clients ) )
-    const clients = useSelector( state => state.clients.clients );
-    const [selectedClient, setSelectedClient] = useState(clients[0]);
-    
-    const handleInputChange = () =>{};
+    const activeTeammate = useSelector( state => state.team.activeTeammate );   
+    const { id, name, phone } = activeTeammate; 
+
+    const [values, handleInputChange ] = useForm({
+        name,
+        phone
+    })
+
+
 
     const onCloseModal = () => {
+        dispatch( delActiveTeammate())
         dispatch( onCloseEditT());
     }
 
-    const onClientChange = ({target}) => {
-        console.log(target.value)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setDisabled(true);
+        dispatch(editMember({ id, finalValues: {...values}}))
+        onCloseModal();
     }
-
-
-    //TODO: Arreglar lo del selected client, no jala con el useState
-    // 9 cita primera
-    // 
-
-    // console.log(selectedClient);
 
     return (
         <div>
@@ -39,28 +42,21 @@ export const EditModalTeam = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={ 200 }
             >   
-            <h1>Edit Client</h1>
+            <h1>Edit Team member</h1>
             <hr />
-            {/* <form>
-                <div className="form-floating mb-2">
-                    <select className="form-select" onChange={ onClientChange }>
-                        { clients.map( (client) => {
-                            return (
-                                <option className='optionn' key={client.id} value={client.id}>{client.name} - {client.phone}</option>
-                            )
-                        })}
-                    </select>
-                    <label>Cliente a editar</label>
+            <form onSubmit={handleSubmit}>
+                <div className='mb-2'>
+                    <label className='form-label'>Team member name:</label>
+                    <input type="text" name="name" className='form-control' value={values.name} onChange={handleInputChange}/>
                 </div>
-                <div className="form-floating mb-2">
-                    <input type="text" value={ selectedClient.name } onChange={ handleInputChange } name='name' className="form-control"/>
-                    <label>Client name</label>
+                <div className='mb-2'>
+                    <label className='form-label'>Team member phone:</label>
+                    <input type="text" name="phone" className='form-control' value={values.phone} onChange={handleInputChange}/>
                 </div>
-                <div className="form-floating mb-2">
-                    <input type="name" value={ selectedClient.phone } onChange={ handleInputChange } name='name' className="form-control"/>
-                    <label>Client Phone</label>
+                <div className='mt-3 w-100 d-flex justify-content-center'>
+                    <button className='btn btn-warning' disabled={disabled}>Edit Team member</button>
                 </div>
-            </form> */}
+            </form>
             </Modal>
         </div>
     )
