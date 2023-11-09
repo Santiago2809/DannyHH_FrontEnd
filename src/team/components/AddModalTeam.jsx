@@ -13,7 +13,7 @@ export const AddModalTeam = () => {
 
     // eslint-disable-next-line no-unused-vars
     const [disabled, setDisabled] = useState(false);
-    const [ values, handleInputChange, reset ] = useForm({
+    const [ values, handleInputChange ] = useForm({
         name: '',
         phone: ''
     })
