@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authSlice, calendarSlice, clientsSlice, uiSlice } from "./";
+import { authSlice, calendarSlice, clientsSlice, teamSlice, uiSlice } from "./";
 
 
 export const store = configureStore({
@@ -7,7 +7,8 @@ export const store = configureStore({
         ui: uiSlice.reducer,
         auth: authSlice.reducer,
         clients: clientsSlice.reducer,
-        calendar: calendarSlice.reducer
+        calendar: calendarSlice.reducer,
+        team: teamSlice.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false

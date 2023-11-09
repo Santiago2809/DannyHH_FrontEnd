@@ -1,26 +1,25 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { onOpenAddT, onOpenDelT, onOpenEditT } from '../../store';
 import { AddModalTeam, DeleteModalTeam, EditModalTeam } from '..';
 
-const headers = ["Name","Phone"]
+const headers = ["Name", "Phone"]
 
 const team = [
     {
-        id: new Date().getTime(),
+        id: crypto.randomUUID(),
         name: "Laura",
         phone: "6622575297"
+    },
+    {
+        id: crypto.randomUUID(),
+        name: "Rosita",
+        phone: "6625418596"
     }
 ]
 
 export const TeamScreen = () => {
 
-    const clients = useSelector(store => store.clients.clients);
     const dispatch = useDispatch();
-
-    const [clientsLocaleStorage, setClients] = useState(
-        (JSON.parse(localStorage.getItem('clients')) == null) ? [] : JSON.parse(localStorage.getItem('clients'))
-    );
 
 
     const onAddOpen = () => {
@@ -42,16 +41,13 @@ export const TeamScreen = () => {
                     <button onClick={onAddOpen} className='controlBtn btn btn-success'>
                         Add member
                     </button>
-                    <button onClick={onEditOpen} className='controlBtn btn btn-warning'>
-                        Edit member
-                    </button>
                     <button onClick={onDelOpen} className='controlBtn btn btn-danger'>
                         Delete member
                     </button>
                 </div>
             </div>
             <div className='clientTable mt-4'>
-                <table style={{ "width": "100%" }}>
+                <table style={{ "width": "100%" }} className='table table-striped table-hover table-bordered border-black'>
                     <thead>
                         <tr className="tableNames">
                             {
@@ -61,9 +57,9 @@ export const TeamScreen = () => {
                     </thead>
                     <tbody style={{ "color": "#fff" }}>
                         {
-                            team?.map( member => {
+                            team?.map(member => {
                                 return (
-                                    <tr key={member.id}>
+                                    <tr key={member.id} onClick={onEditOpen} style={{ cursor: 'pointer' }}>
                                         <td className='tableElement p-2'>{member.name}</td>
                                         <td className='tableElement p-2'>{member.phone}</td>
                                     </tr>
