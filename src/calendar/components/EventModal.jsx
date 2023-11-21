@@ -11,11 +11,10 @@ export const EventModal = () => {
     const dispatch = useDispatch();
     const isOpen = useSelector(state => state.ui.isOpenEvent);
     const activeEvent = useSelector(state => state.calendar.activeEvent);
-    const team = useSelector( state => state.team.members)
-    // const team = useSelector(state => state.team.members);
+    const team = useSelector(state => state.team.members)
 
     const { title, address, end, locality, price, start, phone } = activeEvent;
-    
+
     const onCloseModal = () => {
         dispatch(onCloseEvent())
         dispatch(delActiveEvent());
@@ -28,17 +27,17 @@ export const EventModal = () => {
         e.preventDefault();
     }
 
-    const handleSelectChange = ({target}) => {
+    const handleSelectChange = ({ target }) => {
         const { value } = target;
-        if(value === 'na') return;
-        const memberSelected = team.find(member => member.id === value);  
-        if(selectedTeam.filter( member => member.id === value).length > 0) return;      
-        setSelectedTeam( prev => [...prev, memberSelected])
+        if (value === '') return;
+        const memberSelected = team.find(member => member.id === value);
+        if (selectedTeam.filter(member => member.id === value).length > 0) return;
+        setSelectedTeam(prev => [...prev, memberSelected])
     }
 
-    const handleTeamItem = ({target}) => {
+    const handleTeamItem = ({ target }) => {
         const teamName = target.value;
-        setSelectedTeam(prev => prev.filter( member => member.name != teamName))
+        setSelectedTeam(prev => prev.filter(member => member.name != teamName))
     }
     return (
         <Modal
@@ -78,7 +77,7 @@ export const EventModal = () => {
                     <div className='mb-2'>
                         <label>Select Team:</label>
                         <select name="teamMembers" className='form-control' onChange={handleSelectChange}>
-                            <option value="na" className='optionn'>--Not Selected--</option>
+                            <option value="" className='optionn'>--Not Selected--</option>
                             {team.map(member => (
                                 <option key={member.id} className='optionn' value={member.id}>{member.name} - {member.phone}</option>
                             ))}
@@ -86,18 +85,18 @@ export const EventModal = () => {
                     </div>
 
                     {
-                        selectedTeam.length > 0 
-                        ?   (<div>
+                        selectedTeam.length > 0
+                            ? (<div>
                                 <label className='form-label'>Selected Team:</label>
                                 {
-                                    selectedTeam.map( member => (
-                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{cursor: 'pointer'}} onClick={handleTeamItem}/>
+                                    selectedTeam.map(member => (
+                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{ cursor: 'pointer' }} onClick={handleTeamItem} />
                                     ))
                                 }
                                 <button className='btn btn-success mt-3'>Confirm team</button>
                             </div>
                             )
-                        :   null
+                            : null
 
                     }
                 </div>

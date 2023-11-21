@@ -4,12 +4,11 @@ import { validateAdd } from '../index';
 import { useForm } from '../../hooks/useForm';
 import ReactDatePicker from 'react-datepicker';
 import { addDays, fromUnixTime, millisecondsToSeconds } from 'date-fns';
-
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { addClients, onCloseAddC } from '../../store';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { addDBClient } from '../helpers/addDBClient';
 import { days_of_week } from '../../types';
 
@@ -45,32 +44,9 @@ export const AddModalClient = () => {
 
     const onCloseModal = () => {
         dispatch(onCloseAddC());
+        setChangeCreated(new Date());
+        setHour(new Date().setHours(8,0));
         reset();
-    }
-
-    const notifyError = (message) => {
-        return toast.error(message, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
-    const notifySuccess = (message) => {
-        return toast.success(message, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     }
 
     const checkDate = (date) => {
@@ -85,10 +61,11 @@ export const AddModalClient = () => {
     const onHandleSubmit = async (e) => {
         e.preventDefault();
         setDisabledButton(true)
-        //Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
+
+        //?Si la hora no fue cambiada viene en formato de timestap en ms pero el convertidor utiliza segundos
         const formatHour = (typeof hour === 'number') ? fromUnixTime(millisecondsToSeconds(hour)) : hour;
         const finalHour = `${formatHour.getHours()}:${formatHour.getMinutes() == "0" ? "00" : formatHour.getMinutes()}`;
-        // console.log({name, phone, address, locality, frecuency, finalHour, dweek, noWeek, category, price});
+        //? console.log({name, phone, address, locality, frecuency, finalHour, dweek, noWeek, category, price});
 
 
         const result = validateAdd(name, phone, address, locality, price, frecuency, dweek, noWeek, comments);
@@ -116,13 +93,13 @@ export const AddModalClient = () => {
                 .then(() => {
                     dispatch(addClients({ ...client, id: customers.at(-1).id + 1 }))
                     notifySuccess("Client saved")
+                    onCloseModal();
                 })
                 .catch(() => {
-                    notifyError("Ups! There was a problem saving the client")
+                    notifyError("Ups! There was a problem saving the client. Try again")
                 })
                 .finally(() => {
                     setDisabledButton(false);
-                    onCloseModal();
                 });
             
         }
@@ -201,7 +178,6 @@ export const AddModalClient = () => {
                                 dateFormat="h:mm aa"
                                 disabled={checkCategory()}
                             />
-                            {/* <input value={hour} onChange={handleInputChange} name='hour' type="text" className='form-control' placeholder='hour'/>     */}
                         </div>
                         <div className='col-6'>
                             <label className='form-label fw-bold'>Duration:</label>
@@ -248,12 +224,6 @@ export const AddModalClient = () => {
                             className='form-control'
                             onChange={checkDate}
                             minDate={addDays(new Date(),1)}
-                            // maxTime={new Date().setHours(14, 0)}
-                            // showTimeSelect
-                            // showTimeSelectOnly
-                            // timeIntervals={30}
-                            // timeCaption="Time"
-                            // dateFormat="h:mm aa"
                             disabled={checkCategory()}
                         />
                     </div>

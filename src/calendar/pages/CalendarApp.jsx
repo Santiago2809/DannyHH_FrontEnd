@@ -18,9 +18,8 @@ export const CalendarApp = () => {
     const dispatch = useDispatch();
     const calendarEvents = useSelector(state => state.calendar.events);
     
-    //Se crea esta variable porque si se usa el lenght de calendarEvents en el useEffect truena
+    //* Se crea esta variable porque si se usa el lenght de calendarEvents en el useEffect truena ->
     const len = calendarEvents.length;
-    // const ocasionalDates = useSelector(state => state.calendar.ocasionalDates);
     const customers = useSelector(state => state.clients.clients);
     const isOpen = useSelector(state => state.ui.isAddOpenCal);
 
@@ -38,20 +37,9 @@ export const CalendarApp = () => {
         }
     }, [customers, dispatch, len])
 
-    // useEffect(() => {
-    //     setOcasional(ocasionalDates).forEach( date => {
-    //         events.push(date)
-    //     })
-    //     dispatch(setEvents(events))
-    // },[dispatch, ocasionalDates])
-
     if (!status) {
         return <Navigate to="/auth" />
     }
-
-    // const onDubleClick = ( event ) => { 
-    //     console.log({ doubleClick: event})
-    // }
 
     const onSelect = (event) => {
         dispatch(setActiveEvent({

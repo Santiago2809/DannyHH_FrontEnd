@@ -87,9 +87,23 @@ export const getEvents = (customers = [] ) => {
 				}
 			}
 		} else {
-			//En lo siguiente se calcula cuantos dias se añadir an para la primera limpieza, en base a que dia es la creacion
-			//Se crea un ciclo para generar fechas del cliente
-			for(let i = 0; i <= 20; i++){
+			//*Se crea un ciclo para generar fechas del cliente
+			let forLoops = 20;
+			switch(frequency){
+				case 'monthly':
+					forLoops = 14;
+					break;
+				case 'every_week':
+					forLoops = 48;
+					break;
+				case 'every_two_weeks':
+					forLoops = 24;
+					break;
+				case 'every_three_weeks':
+					forLoops = 19;
+					break;
+			}
+			for(let i = 0; i <= forLoops; i++){
 				if( frequency ){
 					switch (frequency){
 						case 'monthly':{

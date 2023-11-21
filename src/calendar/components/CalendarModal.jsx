@@ -2,14 +2,11 @@ import { useState } from 'react'
 import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import Modal from 'react-modal';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError } from '../../helpers';
 import '../../index.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { onAddCloseCal } from '../../store';
-import { toast } from 'react-toastify';
 import { fromUnixTime, millisecondsToSeconds } from 'date-fns';
-import { addEvent } from '../helper/addEvent';
-
 
 Modal.setAppElement('#root');
 
@@ -30,11 +27,12 @@ export const CalendarModal = () => {
         locality: ''
     })
 
+    //** Funcion que cierra el modal
     const onCloseModal = () => {
         dispatch(onAddCloseCal());
     };
 
-    //Funcion que guarda los campos del formulario
+    //*Funcion que guarda los campos del formulario
     const onInputChange = ({ target }) => {
         setFormValues({
             ...formValues,
@@ -42,7 +40,7 @@ export const CalendarModal = () => {
         })
     }
 
-    //Funcion que guarda las fechas cuando cambian
+    //*Funcion que guarda las fechas cuando cambian
     const onDateChange = (event = new Date(), changing) => {
         setFormValues({
             ...formValues,
@@ -50,7 +48,7 @@ export const CalendarModal = () => {
         })
     }
 
-    //Funcion validadora de los campos en el formulario
+    //*Funcion validadora de los campos en el formulario
     const validate = (values = {}) => {
 
         if (values.customer === '') {
@@ -61,11 +59,11 @@ export const CalendarModal = () => {
             notifyError("Invalid Date")
             return false;
         }
-        if (values.address.length < 4){
+        if (values.address.length < 4) {
             notifyError("Invalid Address")
             return false;
         }
-        if (values.locality.length < 4){
+        if (values.locality.length < 4) {
             notifyError("Invalid Locality")
             return false;
         }
@@ -76,13 +74,13 @@ export const CalendarModal = () => {
         return true;
     }
 
-    //Funcion que guarda los datos al hacer submit en el formulario
+    //*Funcion que guarda los datos al hacer submit en el formulario
     const onSubmit = async (e) => {
         e.preventDefault();
 
         if (validate({ ...formValues })) {
 
-            //Si la hora no fue cambiada viene en timestamp
+            //? Si la hora no fue cambiada viene en timestamp por lo tanto hacemos la conversion
             const formatHour = (typeof formValues.date === 'number') ? fromUnixTime(millisecondsToSeconds(formValues.date)) : formValues.date;
 
             const idx = formatHour.toLocaleTimeString().lastIndexOf(':');
@@ -90,7 +88,7 @@ export const CalendarModal = () => {
             const finalValues = {
                 ...formValues,
                 customer: +formValues.customer,
-                date: value,    
+                date: value,
                 duration: +formValues.duration,
                 price: +formValues.price,
                 comments: formValues.comments.trim().length < 1 ? null : formValues.comments
@@ -107,31 +105,6 @@ export const CalendarModal = () => {
             //     })
             // dispatch(onAddCloseCal());
         }
-    }
-
-    const notifyError = (message) => {
-        return toast.error(message, {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-    }
-    const notifySuccess = (message) => {
-        return toast.success(message, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     }
 
     return (
@@ -177,12 +150,12 @@ export const CalendarModal = () => {
 
                 <div className='mb-2'>
                     <label className='form-label'>Address:</label>
-                    <input type="text" className='form-control' placeholder='Address...' name='address' value={formValues.address} onChange={onInputChange}/>
+                    <input type="text" className='form-control' placeholder='Address...' name='address' value={formValues.address} onChange={onInputChange} />
                 </div>
-                
+
                 <div className='mb-2'>
                     <label className='form-label'>Locality:</label>
-                    <input type="text" className='form-control' placeholder='Locality...' name='locality' value={formValues.locality} onChange={onInputChange}/>
+                    <input type="text" className='form-control' placeholder='Locality...' name='locality' value={formValues.locality} onChange={onInputChange} />
                 </div>
 
                 <div>
@@ -196,69 +169,9 @@ export const CalendarModal = () => {
 
                 <div>
                     <label className='form-label'>Price</label>
-                    <input className='form-control' autoComplete='off' type="text" value={formValues.price} onChange={onInputChange} name='price'/>
+                    <input className='form-control' autoComplete='off' type="text" value={formValues.price} onChange={onInputChange} name='price' />
                 </div>
-
-
                 <hr />
-                {/* <div className='form-group mb-2'>
-                    <label className='d-block mb-2'>Frequency:</label>
-                    <div className="form-check form-check-inline">
-                        <input onChange={ onFrecuencyChange } value={"once"} defaultChecked className="form-check-input" type="radio" name="flexRadioDefault"/>
-                        <label className="form-check-label" htmlFor="flexRadioDefault1">
-                            Once
-                        </label>
-                    </div>
-                    <div className="form-check form-check-inline">
-                        <input onChange={ onFrecuencyChange } value={"otherweek"} className="form-check-input" type="radio" name="flexRadioDefault"/>
-                        <label className="form-check-label" htmlFor="flexRadioDefault1">
-                            Every other week
-                        </label>
-                    </div>
-                    <div className="form-check form-check-inline">
-                        <input onChange={ onFrecuencyChange } value={"monthly"} className="form-check-input" type="radio" name="flexRadioDefault"/>
-                        <label className="form-check-label" htmlFor="flexRadioDefault1">
-                            Monthly
-                        </label>
-                    </div>
-                </div>
-                {
-                    showNumber && 
-                    <div className="form-group" style={{color: "#000"}}>
-                        <label>Ingresa el numero de veces que se repetira: </label>
-                        <input autoComplete="false"  onChange={ onInputChange } name='freqNum' className="form-control my-2" type="number" min={2}/>
-                    </div>
-                } */}
-                {/* <div className="form-group mb-2">
-                    <label>Titulo y notas</label>
-                    <input 
-                        type="text" 
-                        className="form-control"
-                        placeholder="Título del evento"
-                        value={formValues.title}
-                        onChange={ onInputChange }
-                        name="title"
-                        autoComplete="off"
-                    />
-                    <div className="invalid-feedback">
-                        Please choose a username.
-                    </div>
-                    <small id="emailHelp" className="form-text text-muted">Una descripción corta</small>
-                </div>
-
-                <div className="form-group mb-2">
-                    <textarea 
-                        type="text" 
-                        className="form-control"
-                        placeholder="Notas"
-                        value={ formValues.notes }
-                        onChange={ onInputChange }
-                        rows="3"
-                        name="notes"
-                    ></textarea>
-                    <small id="emailHelp" className="form-text text-muted">Información adicional</small>
-                </div> */}
-
                 <button
                     type="submit"
                     className="btn btn-outline-primary btn-block guardar"

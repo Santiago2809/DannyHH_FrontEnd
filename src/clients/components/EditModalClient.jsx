@@ -311,3 +311,6 @@ export const EditModalClient = () => {
         </div>
     )
 }
+
+
+//TODO hacer la funcion validadora para todo el form ya que ocupa mucho espacio en file

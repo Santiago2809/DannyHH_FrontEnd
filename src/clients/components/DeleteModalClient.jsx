@@ -1,9 +1,9 @@
 import Modal from 'react-modal';
 import { useForm } from '../../hooks/useForm';
-import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { onCloseDelC } from '../../store';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delDBClient } from '../helpers/delDBClient';
 
 export const DeleteModalClient = () => {
@@ -19,38 +19,16 @@ export const DeleteModalClient = () => {
     const onCloseModal = () => {
         dispatch(onCloseDelC());
     }
-
-    const delCorrectly = () => {
-        toast.success('Client deleted correctly', {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            });
-    }
     
     const onDelete = async () => {
         
         await delDBClient(values.id)
             .then( () => {
                 dispatch(onCloseDelC());
-                delCorrectly();
+                notifySuccess('Client deleted correctly');
             })
             .catch( () => {
-                return toast.error("Ups! Something gone wrong", {
-                    position: "top-center",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
+                return notifyError("Ups! Something gone wrong")
             })
     }
 

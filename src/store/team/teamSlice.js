@@ -5,13 +5,11 @@ export const teamSlice = createSlice({
     initialState:{
         members: [{
             id: crypto.randomUUID(),
-            name: "Laura",
-            phone: "6622575297"
+            name: "Laura"
         },
         {
             id: crypto.randomUUID(),
-            name: "Rosita",
-            phone: "6625418596"
+            name: "Rosita"
         }],
         activeTeammate: {}
     },

@@ -5,6 +5,7 @@ export const uiSlice = createSlice({
     name: 'ui',
     initialState: {
         loadingC: false,
+        loadingT: false,
 
         isAddOpenCal: false,
 
@@ -25,6 +26,13 @@ export const uiSlice = createSlice({
         },
         onLoadedC: (state) => {
             state.loadingC = false;
+        },
+        //* Loading team members
+        onLoadT: (state) => {
+            state.loadingT = true;
+        },
+        onLoadedT: (state) => {
+            state.loadingT = false;
         },
         ////Calendar
         onAddOpenCal: (state) => {
@@ -81,4 +89,4 @@ export const uiSlice = createSlice({
     }
 })
 
-export const { onLoadC, onLoadedC, onAddOpenCal, onAddCloseCal, onCloseAddC, onCloseDelC, onCloseEditC, onOpenAddC, onOpenDelC, onOpenEditC, onOpenAddT, onCloseAddT, onOpenEditT, onCloseEditT, onOpenDelT, onCloseDelT, onOpenEvent, onCloseEvent } = uiSlice.actions;
+export const { onLoadC, onLoadedC, onLoadT, onLoadedT, onAddOpenCal, onAddCloseCal, onCloseAddC, onCloseDelC, onCloseEditC, onOpenAddC, onOpenDelC, onOpenEditC, onOpenAddT, onCloseAddT, onOpenEditT, onCloseEditT, onOpenDelT, onCloseDelT, onOpenEvent, onCloseEvent } = uiSlice.actions;
