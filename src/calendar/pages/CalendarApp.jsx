@@ -21,8 +21,7 @@ export const CalendarApp = () => {
     //* Se crea esta variable porque si se usa el lenght de calendarEvents en el useEffect truena ->
     const len = calendarEvents.length;
     const customers = useSelector(state => state.clients.clients);
-    const isOpen = useSelector(state => state.ui.isAddOpenCal);
-
+    const {isAddOpenCal, isOpenEvent } = useSelector(state => state.ui );
 
     useEffect(() => {
         if (len > 1) return
@@ -82,8 +81,8 @@ export const CalendarApp = () => {
                 min={minValue}
                 max={maxValue}
             />
-            {isOpen && <CalendarModal />}
-            <EventModal />
+            {isAddOpenCal && <CalendarModal />}
+            {isOpenEvent && <EventModal />}
             <button className='btn btn-success  ms-3' onClick={onAddOpen}>Add Date</button>
         </div>
     )

@@ -8,7 +8,7 @@ export const getEvents = (customers = [] ) => {
 		let dates = [];
 		
 		const daysWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-		const { id, name, phone, address, locality, frequency, hour, price, created, duration, dweek, no_week } = customer;
+		const { id, name, phone, address, locality, frequency, hour, price, created, duration, dweek, no_week, team } = customer;
 		//Se almacencan los valores de year - month - day de la fecha de creacion por cliente
 		const numbers = created?.split('-');
 
@@ -30,7 +30,8 @@ export const getEvents = (customers = [] ) => {
 			phone,
 			address,
 			locality,
-			price
+			price,
+			team,
 		})
 
 		//* Con este if se decide si el cliente tiene un dia del mes asignado o es por frecuencia
@@ -53,7 +54,8 @@ export const getEvents = (customers = [] ) => {
 						phone,
 						address,
 						locality,
-						price
+						price,
+						team
 					})
 					nextDate = startDate;
 				} else if( nextDate.getDay() > daysWeek.indexOf(dweek) ) {
@@ -67,7 +69,8 @@ export const getEvents = (customers = [] ) => {
 						phone,
 						address,
 						locality,
-						price
+						price,
+						team
 					})
 					nextDate = startDate;
 				} else {
@@ -81,7 +84,8 @@ export const getEvents = (customers = [] ) => {
 						phone,
 						address,
 						locality,
-						price
+						price,
+						team
 					})
 					nextDate = startDate;
 				}
@@ -116,7 +120,8 @@ export const getEvents = (customers = [] ) => {
 								phone,
 								address,
 								locality,
-								price
+								price,
+								team
 							})
 							break;
 						}
@@ -130,7 +135,8 @@ export const getEvents = (customers = [] ) => {
 								phone,
 								address,
 								locality,
-								price
+								price,
+								team
 							})
 							break;
 						}
@@ -144,7 +150,8 @@ export const getEvents = (customers = [] ) => {
 								phone,
 								address,
 								locality,
-								price
+								price,
+								team
 							})
 							break;	
 						}
@@ -158,7 +165,8 @@ export const getEvents = (customers = [] ) => {
 								phone,
 								address,
 								locality,
-								price
+								price,
+								team
 							})
 							break
 						}

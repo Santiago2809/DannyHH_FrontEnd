@@ -4,24 +4,25 @@ import { customStyles } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 
-
 export const EventModal = () => {
 
-    const [selectedTeam, setSelectedTeam] = useState([]);
     const dispatch = useDispatch();
-    const isOpen = useSelector(state => state.ui.isOpenEvent);
+    const isOpen = useSelector(state => state.ui.isOpenEvent );
     const activeEvent = useSelector(state => state.calendar.activeEvent);
-    const team = useSelector(state => state.team.members)
+    const companyTeam = useSelector(state => state.team.members)
+    
+    const { title, address, end, locality, price, start, phone, team } = activeEvent;
+    const start_date = new Date(start);
+    const end_date = new Date(end);
 
-    const { title, address, end, locality, price, start, phone } = activeEvent;
-
+    const customerTeam = team === null ? [] : team.split(",");  
+    const [selectedTeam, setSelectedTeam] = useState(customerTeam);
+    
     const onCloseModal = () => {
         dispatch(onCloseEvent())
         dispatch(delActiveEvent());
     };
 
-    const start_date = new Date(start);
-    const end_date = new Date(end);
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -30,12 +31,12 @@ export const EventModal = () => {
     const handleSelectChange = ({ target }) => {
         const { value } = target;
         if (value === '') return;
-        const memberSelected = team.find(member => member.id === value);
-        if (selectedTeam.filter(member => member.id === value).length > 0) return;
+        const memberSelected = companyTeam.find(member => member.id === +value);
+        if (selectedTeam.find(member => member.id === +value)) return;
         setSelectedTeam(prev => [...prev, memberSelected])
     }
 
-    const handleTeamItem = ({ target }) => {
+    const handleMemberDelete = ({ target }) => {
         const teamName = target.value;
         setSelectedTeam(prev => prev.filter(member => member.name != teamName))
     }
@@ -76,10 +77,10 @@ export const EventModal = () => {
 
                     <div className='mb-2'>
                         <label>Select Team:</label>
-                        <select name="teamMembers" className='form-control' onChange={handleSelectChange}>
+                        <select name="teamMembers" className='form-control mt-2' onChange={handleSelectChange}>
                             <option value="" className='optionn'>--Not Selected--</option>
-                            {team.map(member => (
-                                <option key={member.id} className='optionn' value={member.id}>{member.name} - {member.phone}</option>
+                            {companyTeam.map(member => (
+                                <option key={member.id} className='optionn' value={member.id}>{member.name}</option>
                             ))}
                         </select>
                     </div>
@@ -90,7 +91,7 @@ export const EventModal = () => {
                                 <label className='form-label'>Selected Team:</label>
                                 {
                                     selectedTeam.map(member => (
-                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{ cursor: 'pointer' }} onClick={handleTeamItem} />
+                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{ cursor: 'pointer' }} onClick={handleMemberDelete} />
                                     ))
                                 }
                                 <button className='btn btn-success mt-3'>Confirm team</button>
