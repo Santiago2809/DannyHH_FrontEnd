@@ -72,6 +72,7 @@ export const AddModalClient = () => {
 
         if (result.type === 'error') {
             notifyError(result.message)
+            setDisabledButton(false);
             return;
         } else {
             // const today = new Date();

@@ -120,9 +120,11 @@ export const EditModalClient = () => {
         //Validaciones necesarias
         if ((editedCustomer.dweek != null && editedCustomer.no_week != null && editedCustomer.frequency != null)) {
             notifyError("Frequency, day of week and number of week cant be filled at the same time")
+            setDisabledButton(false)
             return
         } else if (editedCustomer.frequency != null && editedCustomer.no_week != null && editedCustomer.dweek === null) {
             notifyError("Frequency and number of week must not be filled at the same time")
+            setDisabledButton(false)
             return
         }
 
