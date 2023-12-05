@@ -28,9 +28,9 @@ export const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        localStorage.setItem('auth', true);
-        if (username.trim().toLoweCase() == "omar" && pswd == "1234") {
+        if (username.trim().toLowerCase() == "omar" && pswd == "1234") {
             dispatch(onLogin());
+            localStorage.setItem('auth', true);
         } else {
             notifyError('Incorrect username or password');
         }
