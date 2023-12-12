@@ -1,0 +1,17 @@
+div label {
+    font-weight: bold;
+}
+input, select {
+    border-color: #9faab5 !important;
+    transition: all 0.4s ease !important;
+}
+.teamSelect:hover {
+    cursor: pointer;
+}
+.memberDelete {
+    margin-bottom: 5px;
+}
+.memberDelete:hover {
+    border-color: rgb(186, 18, 18) !important;
+    background-color: #F9D8D8 !important;
+}

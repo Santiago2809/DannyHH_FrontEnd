@@ -224,7 +224,7 @@ export const AddModalClient = () => {
                             selected={changeCreated}
                             className='form-control'
                             onChange={checkDate}
-                            minDate={addDays(new Date(),1)}
+                            // minDate={addDays(new Date(),1)}
                             disabled={checkCategory()}
                         />
                     </div>

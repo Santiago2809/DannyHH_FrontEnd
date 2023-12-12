@@ -41,7 +41,7 @@ export const Navbar = () => {
                         style={({ isActive }) => {
                             return {
                                 color: isActive ? '#7885BB' : "#fff",
-                                textDecoration: isActive ? 'underline' : 'none'
+                                textDecoration: isActive ? 'underline' : 'none',
                             }
                         }}
 

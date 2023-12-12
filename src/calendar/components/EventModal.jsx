@@ -1,4 +1,5 @@
 import Modal from 'react-modal'
+import './eventmodal.css';
 import { useState } from 'react';
 import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';
@@ -69,8 +70,7 @@ export const EventModal = () => {
             .catch(() => {
                 notifyError("Ups! Something gone wrong, try again")
                 setConfirmDisabled(false);
-            })
-        // Manejar la confirmacion del equipo al cliente
+            });  
     }
 
     return (
@@ -110,7 +110,7 @@ export const EventModal = () => {
 
                     <div className='mb-2'>
                         <label>Select Team:</label>
-                        <select name="teamMembers" className='form-control mt-2' onChange={handleSelectChange}>
+                        <select name="teamMembers" className='form-control mt-2 teamSelect' onChange={handleSelectChange}>
                             <option value="" className='optionn'>--Not Selected--</option>
                             {companyTeam.map(member => (
                                 <option key={member.id} className='optionn' value={member.id}>{member.name}</option>
@@ -124,7 +124,7 @@ export const EventModal = () => {
                                 <label className='form-label'>Selected Team:</label>
                                 {
                                     selectedTeam.map(member => (
-                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{ cursor: 'pointer' }} onClick={handleMemberDelete} />
+                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control memberDelete' style={{ cursor: 'pointer' }} onClick={handleMemberDelete} />
                                     ))
                                 }
                             </div>
