@@ -108,7 +108,11 @@ export const EditModalClient = () => {
         //Comprobar si se han editado los valores
         // console.log(compareActive)
         // console.log(editedCustomer)
-        if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer) && isSameDay(new Date(created), changeCreated)) return notifyError("Must be at leat 1 edited value")
+        if (JSON.stringify(compareActive) === JSON.stringify(editedCustomer) && isSameDay(new Date(created), changeCreated)) {
+            notifyError("Must be at leat 1 edited value")
+            setDisabledButton(false)            
+            return
+        }
         // console.log(changedValues)
 
 

@@ -1,8 +1,10 @@
 import Modal from 'react-modal'
+import './eventmodal.css';
 import { useState } from 'react';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
+import { editCustomerTeam } from '../helper/editCustomerTeam';
 
 export const EventModal = () => {
 
@@ -10,36 +12,67 @@ export const EventModal = () => {
     const isOpen = useSelector(state => state.ui.isOpenEvent );
     const activeEvent = useSelector(state => state.calendar.activeEvent);
     const companyTeam = useSelector(state => state.team.members)
+    const [confirmDisabled, setConfirmDisabled ] = useState(false);
     
-    const { title, address, end, locality, price, start, phone, team } = activeEvent;
+    const { id, title, address, end, locality, price, start, phone, team } = activeEvent;
     const start_date = new Date(start);
     const end_date = new Date(end);
 
-    const customerTeam = team === null ? [] : team.split(",");  
+    const customerTeam = team === null ? [] : JSON.parse(team);
+
     const [selectedTeam, setSelectedTeam] = useState(customerTeam);
+    const [haveChange, setHaveChange] = useState(false);
     
     const onCloseModal = () => {
         dispatch(onCloseEvent())
         dispatch(delActiveEvent());
     };
 
-
     const onSubmit = (e) => {
         e.preventDefault();
     }
 
+    //* Funcion que maneja el cambio de elementos del equipo del cliente
     const handleSelectChange = ({ target }) => {
         const { value } = target;
         if (value === '') return;
-        const memberSelected = companyTeam.find(member => member.id === +value);
         if (selectedTeam.find(member => member.id === +value)) return;
+        const memberSelected = companyTeam.find(member => member.id === +value);
         setSelectedTeam(prev => [...prev, memberSelected])
+        setHaveChange(true)
     }
 
+    //* Eliminamos un elemento del equipo del cliente
     const handleMemberDelete = ({ target }) => {
         const teamName = target.value;
         setSelectedTeam(prev => prev.filter(member => member.name != teamName))
+        setHaveChange(true)
     }
+
+    const onConfirmTeam = async () => {
+
+        setConfirmDisabled(true)
+        //* Ordenamos los arreglos del equipo inicial y el seleccionado para comprobar si son iguales y abandonar la ejecucion
+        const customerTeamCompare = customerTeam.toSorted( (a,b) => a.id - b.id );
+        const selectedTeamCompare = selectedTeam.toSorted( (a,b) => a.id - b.id );
+
+        //* Comprobamos igualdad, en caso negativo actualizamos la base de datos
+        if(JSON.stringify(customerTeamCompare.sort()) === JSON.stringify(selectedTeamCompare)){
+            notifyError("The selected team is the same")
+            setConfirmDisabled(false);
+            return
+        }
+        await editCustomerTeam( id, selectedTeam.length < 1 ? null : JSON.stringify(selectedTeam))
+            .then(() => {
+                notifySuccess("Team updated successfully")
+                onCloseModal();
+            })
+            .catch(() => {
+                notifyError("Ups! Something gone wrong, try again")
+                setConfirmDisabled(false);
+            });  
+    }
+
     return (
         <Modal
             isOpen={isOpen}
@@ -77,7 +110,7 @@ export const EventModal = () => {
 
                     <div className='mb-2'>
                         <label>Select Team:</label>
-                        <select name="teamMembers" className='form-control mt-2' onChange={handleSelectChange}>
+                        <select name="teamMembers" className='form-control mt-2 teamSelect' onChange={handleSelectChange}>
                             <option value="" className='optionn'>--Not Selected--</option>
                             {companyTeam.map(member => (
                                 <option key={member.id} className='optionn' value={member.id}>{member.name}</option>
@@ -91,14 +124,17 @@ export const EventModal = () => {
                                 <label className='form-label'>Selected Team:</label>
                                 {
                                     selectedTeam.map(member => (
-                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control' style={{ cursor: 'pointer' }} onClick={handleMemberDelete} />
+                                        <input key={member.id} type="text" readOnly value={member.name} className='form-control memberDelete' style={{ cursor: 'pointer' }} onClick={handleMemberDelete} />
                                     ))
                                 }
-                                <button className='btn btn-success mt-3'>Confirm team</button>
                             </div>
                             )
                             : null
 
+                    }
+                    {
+                        haveChange &&
+                            <button className='btn btn-success mt-3' onClick={onConfirmTeam} disabled={confirmDisabled}>Confirm changes</button>
                     }
                 </div>
             </form>

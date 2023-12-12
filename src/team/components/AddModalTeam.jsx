@@ -28,7 +28,7 @@ export const AddModalTeam = () => {
         e.preventDefault();
         setDisabled(true)
         if(name.length < 3) return;
-        if(phone.length < 8) return;
+        // if(phone.length < 8) return;
         dispatch(addMember({ id: crypto.randomUUID(), name, phone}))
         onCloseModal();
         
