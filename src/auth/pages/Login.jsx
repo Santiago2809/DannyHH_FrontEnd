@@ -28,7 +28,7 @@ export const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (username.trim().toLoweCase() == "omar" && pswd == "1234") {
+        if (username.trim().toLowerCase() == "omar" && pswd == "1234") {
             localStorage.setItem('auth', true);
             dispatch(onLogin());
         } else {

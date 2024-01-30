@@ -64,26 +64,28 @@ export const CalendarApp = () => {
     }
 
     return (
-        <div>
-            <Calendar
-                localizer={localizer}
-                defaultView={lastView}
-                events={calendarEvents}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: 'calc(100vh - 150px)', padding: '15px' }}
-                components={{
-                    event: CalendarEvent
-                }}
-                onSelectEvent={onSelect}
-                onSelectSlot={onSlot}
-                onView={onViewChange}
-                min={minValue}
-                max={maxValue}
-            />
-            {isAddOpenCal && <CalendarModal />}
-            {isOpenEvent && <EventModal />}
-            <button className='btn btn-success  ms-3' onClick={onAddOpen}>Add Date</button>
+        <div className='calendarSection'>
+            <div>
+                <Calendar
+                    localizer={localizer}
+                    defaultView={lastView}
+                    events={calendarEvents}
+                    startAccessor="start"
+                    endAccessor="end"
+                    style={{ height: 'calc(100vh - 150px)', padding: '15px' }}
+                    components={{
+                        event: CalendarEvent
+                    }}
+                    onSelectEvent={onSelect}
+                    onSelectSlot={onSlot}
+                    onView={onViewChange}
+                    min={minValue}
+                    max={maxValue}
+                />
+                {isAddOpenCal && <CalendarModal />}
+                {isOpenEvent && <EventModal />}
+                <button className='btn btn-success  ms-3' onClick={onAddOpen}>Add Date</button>
+            </div>
         </div>
     )
 }

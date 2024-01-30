@@ -1,20 +1,22 @@
 import Modal from 'react-modal'
 import './eventmodal.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delActiveEvent, onCloseEvent } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { editCustomerTeam } from '../helper/editCustomerTeam';
+// import { confirmFinishEvent } from '../helper/confirmFinishEvent';
 
 export const EventModal = () => {
 
     const dispatch = useDispatch();
+    const inputSelectTeam = useRef(null);
     const isOpen = useSelector(state => state.ui.isOpenEvent );
     const activeEvent = useSelector(state => state.calendar.activeEvent);
     const companyTeam = useSelector(state => state.team.members)
     const [confirmDisabled, setConfirmDisabled ] = useState(false);
     
-    const { id, title, address, end, locality, price, start, phone, team } = activeEvent;
+    const { id: customer_id, title, address, end, locality, price, start, phone, team } = activeEvent;
     const start_date = new Date(start);
     const end_date = new Date(end);
 
@@ -39,6 +41,7 @@ export const EventModal = () => {
         if (selectedTeam.find(member => member.id === +value)) return;
         const memberSelected = companyTeam.find(member => member.id === +value);
         setSelectedTeam(prev => [...prev, memberSelected])
+        inputSelectTeam.current.value = "";
         setHaveChange(true)
     }
 
@@ -46,7 +49,18 @@ export const EventModal = () => {
     const handleMemberDelete = ({ target }) => {
         const teamName = target.value;
         setSelectedTeam(prev => prev.filter(member => member.name != teamName))
+        inputSelectTeam.current.value = "";
         setHaveChange(true)
+    }
+    //* Funcion que maneja la confirmacion de la limpieza
+    const onConfirmCleaning = () => {
+        const formatEventDate = new Date(start);
+        const eventDate = `${formatEventDate.getFullYear()}-${formatEventDate.getMonth()+ 1}-${formatEventDate.getDate()},${formatEventDate.getHours()}:${formatEventDate.getMinutes().toString().length < 2 ? '00' : formatEventDate.getMinutes()}`;
+        const finishedEvent = {customer_id,start: eventDate,customer: title, address, price, team};
+        console.log(eventDate)
+        console.log(finishedEvent)
+        //todo: terminar de enviar bien el objeto de fecha terminada y hacer el back para esto
+        // confirmFinishEvent(finishedEvent);
     }
 
     const onConfirmTeam = async () => {
@@ -62,7 +76,7 @@ export const EventModal = () => {
             setConfirmDisabled(false);
             return
         }
-        await editCustomerTeam( id, selectedTeam.length < 1 ? null : JSON.stringify(selectedTeam))
+        await editCustomerTeam( customer_id, selectedTeam.length < 1 ? null : JSON.stringify(selectedTeam))
             .then(() => {
                 notifySuccess("Team updated successfully")
                 onCloseModal();
@@ -104,13 +118,13 @@ export const EventModal = () => {
                         <label className='form-label'>Price:</label>
                         <div className='d-flex'>
                             <input type="text" readOnly value={`$${price}`} className='form-control w-50' />
-                            <button className='btn btn-success ms-2'>Confirm</button>
+                            <button onClick={onConfirmCleaning} className='btn btn-success ms-2'>Confirm</button>
                         </div>
                     </div>
 
                     <div className='mb-2'>
                         <label>Select Team:</label>
-                        <select name="teamMembers" className='form-control mt-2 teamSelect' onChange={handleSelectChange}>
+                        <select name="teamMembers" ref={inputSelectTeam} className='form-control mt-2 teamSelect' onChange={handleSelectChange}>
                             <option value="" className='optionn'>--Not Selected--</option>
                             {companyTeam.map(member => (
                                 <option key={member.id} className='optionn' value={member.id}>{member.name}</option>
