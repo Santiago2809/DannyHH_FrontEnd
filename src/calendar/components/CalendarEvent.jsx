@@ -6,8 +6,15 @@ export const CalendarEvent = ({ event }) => {
     const { title, address, locality } = event;
     return ( 
         <>
-            <strong>{ title }</strong>
-            <strong> - { `${ address }, ${ locality }` }</strong>
+            <div>
+                <strong>{ title }</strong>
+            </div>
+            <div>
+                <strong>{ address }</strong>
+            </div>
+            <div>
+                <strong>{ locality }</strong>
+            </div>
         </>
     )
 }

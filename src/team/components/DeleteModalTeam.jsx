@@ -2,13 +2,17 @@ import Modal from 'react-modal';
 import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { delMember, onCloseDelT } from '../../store';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
+import { delTeamMember } from '../helpers/dbTeamFunctions';
+import { useState } from 'react';
 
 export const DeleteModalTeam = () => {
 
     const isOpen = useSelector(state => state.ui.isDelOpenT);
     const dispatch = useDispatch();
     const fullTeam = useSelector(state => state.team.members);
+
+    const [disabled, setDisabled] = useState(false);
 
     const [value, handleInputChange] = useForm({
         team: '',
@@ -19,11 +23,21 @@ export const DeleteModalTeam = () => {
         dispatch(onCloseDelT());
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (team == '') return;
-        dispatch(delMember(team))
-        onCloseModal();
+        setDisabled(true);
+        if (team == '') {
+            setDisabled(false);    
+            return
+        }
+        await delTeamMember(team)
+            .then(() => {
+                dispatch(delMember(team))
+                notifySuccess("Team member deleted successfully!");
+                onCloseModal();
+            })
+            .catch(e => notifyError(e))
+            .finally(() => setDisabled(false));
     }
 
 
@@ -55,7 +69,7 @@ export const DeleteModalTeam = () => {
                         </select>
                     </div>
                     <div className='d-flex justify-content-center mt-4'>
-                        <button className='btn btn-danger w-50'>
+                        <button className='btn btn-danger w-50' disabled={disabled}>
                             Delete
                         </button>
                     </div>

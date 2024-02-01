@@ -1,20 +1,22 @@
 import Modal from 'react-modal';
 import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { customStyles } from '../../helpers';
+import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { addMember, onCloseAddT } from '../../store';
 import { useState } from 'react';
+import { addTeammate } from '../helpers/dbTeamFunctions';
 
 
 export const AddModalTeam = () => {
 
     const isOpen = useSelector( state => state.ui.isAddOpenT );
+    const team = useSelector(state => state.team.members);
     const dispatch = useDispatch();
 
-    // eslint-disable-next-line no-unused-vars
+
     const [disabled, setDisabled] = useState(false);
     const [ values, handleInputChange ] = useForm({
-        name: '',
+        name:  '',
         phone: ''
     })
     
@@ -24,13 +26,23 @@ export const AddModalTeam = () => {
         dispatch(onCloseAddT());
     }
 
-    const onHandleSubmit = (e) => {
+    const onHandleSubmit = async (e) => {
         e.preventDefault();
         setDisabled(true)
-        if(name.length < 3) return;
-        // if(phone.length < 8) return;
-        dispatch(addMember({ id: crypto.randomUUID(), name, phone}))
-        onCloseModal();
+        if(name.length < 3 || phone.length < 5 ) return;
+        
+        await addTeammate(name, phone)
+            .then(() => {
+                dispatch(addMember({id: team.at(-1).id + 1 , name, phone}))
+                notifySuccess("Teammate added successfully!")
+                onCloseModal();
+            })
+            .catch((e) => {
+                notifyError(e)
+            })
+            .finally(() => {
+                setDisabled(false);
+            })
         
     }
     

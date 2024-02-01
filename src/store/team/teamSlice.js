@@ -3,14 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const teamSlice = createSlice({
     name: 'team',
     initialState:{
-        members: [{
-            id: crypto.randomUUID(),
-            name: "Laura"
-        },
-        {
-            id: crypto.randomUUID(),
-            name: "Rosita"
-        }],
+        members: [],
         activeTeammate: {}
     },
     reducers: {

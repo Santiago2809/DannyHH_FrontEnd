@@ -107,3 +107,6 @@ label {
   width: 100%;
   justify-content: center;
 } */
+.rbc-event-label {
+  display: none;
+}
