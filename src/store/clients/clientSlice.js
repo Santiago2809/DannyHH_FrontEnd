@@ -26,6 +26,16 @@ export const clientsSlice = createSlice({
                 }
             })
         },
+        setTeam: (state, { payload }) => {
+            state.clients = state.clients.map( client => {
+                const team = payload.selectedTeam;
+                if(client.id === payload.id){
+                    return {...client, team: team}
+                } else {
+                    return client
+                }
+            })
+        },
         setActiveCustomer: (state, { payload }) => {
             state.activeCustomer = state.clients.find(customer => customer.id == payload);
         },
@@ -39,4 +49,4 @@ export const clientsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setClients, addClients, delClients,editClients, setActiveCustomer, delActiveCustomer, clientLogout } = clientsSlice.actions;
+export const { setClients, addClients, delClients,editClients, setTeam, setActiveCustomer, delActiveCustomer, clientLogout } = clientsSlice.actions;

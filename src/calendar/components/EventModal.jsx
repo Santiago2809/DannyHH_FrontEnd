@@ -2,7 +2,7 @@ import Modal from 'react-modal'
 import './eventmodal.css';
 import { useState, useRef } from 'react';
 import { customStyles, notifyError, notifySuccess } from '../../helpers';
-import { delActiveEvent, onCloseEvent } from '../../store';
+import { delActiveEvent, onCloseEvent, setTeam } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { editCustomerTeam } from '../helper/editCustomerTeam';
 // import { confirmFinishEvent } from '../helper/confirmFinishEvent';
@@ -63,6 +63,8 @@ export const EventModal = () => {
         // confirmFinishEvent(finishedEvent);
     }
 
+
+    //* Se confirma la edicion del equipo del cliente y se sube a la base de datos
     const onConfirmTeam = async () => {
 
         setConfirmDisabled(true)
@@ -78,6 +80,7 @@ export const EventModal = () => {
         }
         await editCustomerTeam( customer_id, selectedTeam.length < 1 ? null : JSON.stringify(selectedTeam))
             .then(() => {
+                dispatch(setTeam({id: customer_id, selectedTeam: selectedTeam.length < 1 ? null : JSON.stringify(selectedTeam)}))
                 notifySuccess("Team updated successfully")
                 onCloseModal();
             })
@@ -148,7 +151,7 @@ export const EventModal = () => {
                     }
                     {
                         haveChange &&
-                            <button className='btn btn-success mt-3' onClick={onConfirmTeam} disabled={confirmDisabled}>Confirm changes</button>
+                            <button className='btn btn-success mt-3' onClick={onConfirmTeam} disabled={confirmDisabled} type='button'>Confirm changes</button>
                     }
                 </div>
             </form>
