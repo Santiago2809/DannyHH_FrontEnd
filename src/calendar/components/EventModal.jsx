@@ -5,11 +5,13 @@ import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delActiveEvent, onCloseEvent, setTeam } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { editCustomerTeam } from '../helper/editCustomerTeam';
+import { useNavigate } from 'react-router-dom';
 // import { confirmFinishEvent } from '../helper/confirmFinishEvent';
 
 export const EventModal = () => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const inputSelectTeam = useRef(null);
     const isOpen = useSelector(state => state.ui.isOpenEvent );
     const activeEvent = useSelector(state => state.calendar.activeEvent);
@@ -32,6 +34,11 @@ export const EventModal = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+    }
+
+    //* Funcion que navega a la pantalla del cliente que se quiere analizar
+    const goToCustomer = () => {
+        navigate(`/clients?=${title}`)
     }
 
     //* Funcion que maneja el cambio de elementos del equipo del cliente
@@ -103,7 +110,7 @@ export const EventModal = () => {
                 <div style={{ color: '#000' }}>
                     <div className='mb-2'>
                         <label className='form-label'>Customer Name - Phone:</label>
-                        <input type="text" readOnly value={`${title} - ${phone}`} className='form-control' />
+                        <input style={{cursor: 'pointer'}} type="text" readOnly value={`${title} - ${phone}`} className='form-control' onClick={goToCustomer}/>
                     </div>
                     <div className='mb-2'>
                         <label className='form-label'>Address - Locality:</label>

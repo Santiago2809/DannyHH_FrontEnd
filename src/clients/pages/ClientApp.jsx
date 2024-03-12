@@ -3,6 +3,7 @@ import './clientapp.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { onOpenAddC, onOpenDelC, onOpenEditC, setActiveCustomer } from '../../store';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const headers = ["Name", "Phone", "Address", "Location", "Frecuency", "Time", "Day of Week", "No. of Week", "Category", "Price"]
 const frequencyNames = {monthly: "Monthly", every_week: "Every week", every_two_weeks: "Every two weeks", every_three_weeks: "Every three weeks", notA: "Not Available"}
@@ -13,8 +14,10 @@ export const ClientApp = () => {
     const clients = useSelector(store => store.clients.clients);
     const loading = useSelector(store => store.ui.loadingC );
     const { isEditOpenC, isDelOpenC } = useSelector(store => store.ui);
-    const [search, setSearch] = useState('');
+    const { search: searchParam } = useLocation();
+    const [search, setSearch] = useState(searchParam.length > 0 ? searchParam.slice(searchParam.indexOf("=")+1) : '');
     const dispatch = useDispatch();
+
 
     const handleInput = (e) => {
         setSearch(e.target.value);

@@ -1,24 +1,24 @@
 import { useEffect } from 'react'
 import { Navbar } from '../components'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { onLoadC, onLoadT, onLoadedC, onLoadedT, setClients, setMembers } from '../store'
 import { getDbClients } from '../clients/helpers/getDBClients'
-// import { getOcasionalDates } from '../calendar/helper/getOcasionalDates'
 import { useLayoutEffect } from 'react'
 import { getDbTeam } from '../helpers/getDBTeam'
+import { getToken, isAuth } from '../helpers/authToken'
 
 export const HomePage = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isAuth = useSelector(state => state.auth.isAuth);
-
 
     useEffect(() => {
-        const auth = JSON.parse(localStorage.getItem('auth'));
-        if (!auth) navigate("/auth")
-    }, [isAuth, navigate])
+        const token = isAuth(getToken());
+        token.then( res => {
+            if (!res) navigate("/auth")
+        });
+    },[navigate]);
 
     useLayoutEffect(() => {
         dispatch(onLoadC())
@@ -32,12 +32,6 @@ export const HomePage = () => {
             dispatch(onLoadedT())
         });
     }, [dispatch])
-
-    // useLayoutEffect(() => {
-    //     getOcasionalDates().then( dates => {
-    //         dispatch(setOcasional(dates))
-    //     })
-    // },[dispatch])
 
     return (
         <div>

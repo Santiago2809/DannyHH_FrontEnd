@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { base_url } from '../../types';
+import { getToken } from '../../helpers/authToken';
 
 export const addDBClient = async (customer = {}) => {
 
@@ -23,6 +24,9 @@ export const addDBClient = async (customer = {}) => {
             url: `${base_url}customer/addClient`,
             data: {
                 ...db_Customer
+            },
+            headers: {
+                Authorization: 'Bearer ' + getToken()
             }
         })
     } catch (err) {

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { calendarLogout, clientLogout, onLogOut } from '../store';
 
@@ -8,19 +8,15 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
-    const isAuth = useSelector( state => state.auth.isAuth );
 
     useEffect(() => {
         if(location.pathname === "/"){
             navigate('/calendar')
         }
-        const auth = JSON.parse(localStorage.getItem('auth'));
-        if( !auth ) navigate("/auth")
-    },[isAuth, navigate, location.pathname]);
+    },[ navigate, location.pathname]);
 
     const onLogout = () => {
-        localStorage.setItem('auth', false);
-        localStorage.removeItem('customers')
+        localStorage.removeItem('token')
         dispatch(calendarLogout())
         dispatch(clientLogout())
         dispatch(onLogOut());
@@ -58,7 +54,7 @@ export const Navbar = () => {
                         }}
 
                     >
-                        Clients
+                        Customers
                     </NavLink>
                     <NavLink
                         to="/team"

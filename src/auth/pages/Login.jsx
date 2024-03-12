@@ -3,22 +3,23 @@ import { useNavigate } from 'react-router-dom'
 
 import './login.css';
 import { useForm } from '../../hooks/useForm';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { onLogin } from '../../store';
 import { notifyError } from '../../helpers/notifications';
+import { login } from '../helpers/login';
+import { getToken, isAuth, setToken } from '../../helpers/authToken';
 
 export const Login = () => {
 
-    // const status = false;
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isAuth = useSelector(state => state.auth.isAuth);
-    // if( status ) navigate("/calendar");
 
     useEffect(() => {
-        const auth = JSON.parse(localStorage.getItem('auth'));
-        if (auth) navigate("/");
-    }, [isAuth, navigate])
+        const token = isAuth(getToken());
+        token.then( res => {
+            if (res) navigate("/")
+        });
+    }, [navigate])
 
     const [values, handleInputChange] = useForm({
         username: '',
@@ -26,14 +27,15 @@ export const Login = () => {
     });
     const { username, pswd } = values;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (username.trim().toLowerCase() == "omar" && pswd == "1234") {
-            localStorage.setItem('auth', true);
+        const {data} = await login(username, pswd);
+        if(data){
+            setToken(data.token)
             dispatch(onLogin());
-            localStorage.setItem('auth', true);
+            navigate("/");
         } else {
-            notifyError('Incorrect username or password');
+            notifyError('Incorrect username or password')
         }
     }
 
@@ -45,7 +47,7 @@ export const Login = () => {
                     <div className='logincard__username'>
                         <label className='mb-2 fs-5 fw-bold username'>Username:</label>
                         <div className="input-group mb-3">
-                            <input onChange={handleInputChange} name='username' type="text" className="form-control" placeholder="user4" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input onChange={handleInputChange} name='username' type="text" className="form-control" placeholder="user4" aria-label="Username" aria-describedby="basic-addon1" autoComplete='off'/>
                         </div>
                     </div>
 
@@ -57,7 +59,7 @@ export const Login = () => {
                     </div>
 
                     <div className="button d-flex justify-content-center">
-                        <button className="btn btn-primary w-75">Login</button>
+                        <button className="btn btn-primary w-75" type='submit'>Login</button>
                     </div>
 
                 </div>

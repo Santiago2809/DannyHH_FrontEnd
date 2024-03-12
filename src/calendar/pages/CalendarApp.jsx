@@ -1,6 +1,5 @@
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Navigate } from 'react-router-dom';
 
 import './calendar.css'
 import { CalendarEvent, CalendarModal, EventModal, getEvents, maxValue, minValue } from '../index';
@@ -14,7 +13,6 @@ let events = [];
 export const CalendarApp = () => {
 
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || "month");
-    const status = true;
     const dispatch = useDispatch();
     const calendarEvents = useSelector(state => state.calendar.events);
     
@@ -34,11 +32,7 @@ export const CalendarApp = () => {
         return () => {
             events = [];
         }
-    }, [customers, dispatch, len])
-
-    if (!status) {
-        return <Navigate to="/auth" />
-    }
+    }, [customers, dispatch, len]);
 
     const onSelect = (event) => {
         dispatch(setActiveEvent({
@@ -47,10 +41,6 @@ export const CalendarApp = () => {
             end: event.end.toString()
         }))
         dispatch(onOpenEvent());
-    }
-    
-    const onSlot = (event) => {
-        console.log(event)
     }
 
     const onViewChange = (view) => {
@@ -77,7 +67,6 @@ export const CalendarApp = () => {
                         event: CalendarEvent
                     }}
                     onSelectEvent={onSelect}
-                    onSelectSlot={onSlot}
                     onView={onViewChange}
                     min={minValue}
                     max={maxValue}

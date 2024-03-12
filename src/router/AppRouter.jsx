@@ -1,35 +1,13 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Login } from '../auth/index';
-import { CalendarApp } from '../calendar/index';
-import { ClientApp } from '../clients';
-import { ErrorPage } from './ErrorPage';
-import { HomePage } from '../pages/HomePage';
-import { TeamScreen } from '../team';
-
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { privateRoutes } from './privateRoutes';
+import { publicRoutes } from './publicRoutes';
 
 const router = createBrowserRouter([
+    publicRoutes(),
+    privateRoutes(),
     {
-        path: "/auth/*",
-        element: <Login />,
-    },
-    {
-        path: "/",
-        element: <HomePage />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                path: "clients",
-                element: <ClientApp /> 
-            },
-            {
-                path: "calendar",
-                element: <CalendarApp />
-            },
-            {
-                path: "team",
-                element: <TeamScreen />
-            }
-        ]
+        path: "/*",
+        element: <Navigate to="/calendar" replace/>
     }
 ]);
 

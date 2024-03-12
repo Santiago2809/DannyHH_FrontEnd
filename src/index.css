@@ -101,12 +101,3 @@ label {
 .customer:hover {
   cursor: pointer;
 }
-
-/* .calendarSection {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-} */
-.rbc-event-label {
-  display: none;
-}

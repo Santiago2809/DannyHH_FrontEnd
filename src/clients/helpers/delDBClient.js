@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { base_url } from '../../types';
+import { getToken } from '../../helpers/authToken';
 
 export const delDBClient = async (id) => {
     try {
         await axios({
             method: 'delete',
-            url: `${base_url}customer/delCustomer`,
+            url: `${base_url}/customer/delCustomer`,
             data: {
                 id: +id,
+            },
+            headers: {
+                Authorization: 'Bearer ' + getToken()
             }
         })
     }
