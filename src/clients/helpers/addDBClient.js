@@ -21,7 +21,7 @@ export const addDBClient = async (customer = {}) => {
 
         return await axios({
             method: 'post',
-            url: `${base_url}customer/addClient`,
+            url: `${base_url}/customer/addClient`,
             data: {
                 ...db_Customer
             },
