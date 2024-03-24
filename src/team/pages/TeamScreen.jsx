@@ -2,6 +2,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { onOpenAddT, onOpenDelT, onOpenEditT, setActiveTeammate } from '../../store';
 import { AddModalTeam, DeleteModalTeam, EditModalTeam } from '..';
 
+// eslint-disable-next-line no-unused-vars
+import classes from './TeamScreen.module.css';
+
 const headers = ["Name"]
 
 
@@ -27,9 +30,9 @@ export const TeamScreen = () => {
 
     return (
         <div className='p-4'>
-            <div className='w-100 d-flex justify-content-between align-items-center'>
+            <div className={classes.headerScreen}>
                 <h1>Team Screen</h1>
-                <div className='controlBtns'>
+                <div className={classes.controlBtns}>
                     <button onClick={onAddOpen} className='controlBtn btn btn-success'>
                         Add member
                     </button>

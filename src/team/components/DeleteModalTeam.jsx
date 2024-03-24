@@ -6,6 +6,8 @@ import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delTeamMember } from '../helpers/dbTeamFunctions';
 import { useState } from 'react';
 
+import classes from '../../styles/modalStyles.module.css';
+
 export const DeleteModalTeam = () => {
 
     const isOpen = useSelector(state => state.ui.isDelOpenT);
@@ -51,7 +53,10 @@ export const DeleteModalTeam = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={200}
             >
-                <h1 className='p-2'>Delete Team member</h1>
+                <div className={classes.modalHeader}>
+                    <h1 className='p-2'>Delete Team Member</h1>
+                    <span onClick={onCloseModal}>X</span>
+                </div>
                 <hr />
                 <form onSubmit={handleSubmit}>
                     <div className='mt-3'>

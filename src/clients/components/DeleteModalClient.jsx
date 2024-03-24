@@ -2,9 +2,11 @@ import Modal from 'react-modal';
 import { useForm } from '../../hooks/useForm';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { onCloseDelC } from '../../store';
+import { delClients, onCloseDelC } from '../../store';
 import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delDBClient } from '../helpers/delDBClient';
+
+import classes from '../../styles/modalStyles.module.css'
 
 export const DeleteModalClient = () => {
 
@@ -24,6 +26,7 @@ export const DeleteModalClient = () => {
         
         await delDBClient(values.id)
             .then( () => {
+                dispatch(delClients(values.id))
                 dispatch(onCloseDelC());
                 notifySuccess('Client deleted correctly');
             })
@@ -42,7 +45,10 @@ export const DeleteModalClient = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={ 200 }
             >   
-            <h1 className='p-2'>Delete Client</h1>
+            <div className={classes.modalHeader}>
+                    <h1 className='p-2'>Delete Customer</h1>
+                    <span onClick={onCloseModal}>X</span>
+                </div>
             <hr />
             <div className='mt-3'>
                 <label className='form-label fs-3'>Client to delete:</label>

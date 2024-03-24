@@ -17,7 +17,15 @@ export const ClientApp = () => {
     const { search: searchParam } = useLocation();
     const [search, setSearch] = useState(searchParam.length > 0 ? searchParam.slice(searchParam.indexOf("=")+1) : '');
     const dispatch = useDispatch();
+    const [goToTopBtn, setGoToTopBtn] = useState(false)
 
+    window.addEventListener('scroll', () => {
+        if(window.scrollY >= 650){
+            setGoToTopBtn(true)
+        } else {
+            setGoToTopBtn(false)
+        }
+    })
 
     const handleInput = (e) => {
         setSearch(e.target.value);
@@ -34,23 +42,23 @@ export const ClientApp = () => {
     }
 
     return (
-        <div className='p-4'>
-            <div className='w-100 d-flex justify-content-between align-items-center'>
-                <h1>Client Screen</h1>
-                <div className='search_bar w-50'>
-                    <input type="text" className='form-control' style={{height: '50px'}} placeholder='Search' value={search} onChange={handleInput} />
+        <div className='p-4 customerScreen'>
+            <div className='headerContent'>
+                <h1 className='screenTitle'>Customer Screen</h1>
+                <div className='search_bar'>
+                    <input type="text" className='screenInput' style={{height: '50px'}} placeholder='Search' value={search} onChange={handleInput} />
                 </div>
                 <div className='controlBtns'>
                     <button onClick={onAddOpen} className='controlBtn btn btn-success'>
-                        Add client
+                        Add customer
                     </button>
                     <button onClick={onDelOpen} className='controlBtn btn btn-danger'>
-                        Delete client
+                        Delete customer
                     </button>
                 </div>
             </div>
-            <div className='clientTable mt-4'>
-                <table style={{ "width": "100%" }} className='table table-striped table-hover table-bordered border-black'>
+            <div className='clientTable mt-4' style={{overflowX: 'scroll'}}>
+                <table style={{ width: "100%"}} className='table table-striped table-hover table-bordered border-black'>
                     <thead>
                         <tr className="tableNames">
                             {
@@ -117,6 +125,13 @@ export const ClientApp = () => {
             }
             {
                 isDelOpenC && <DeleteModalClient />
+            }
+            {
+                goToTopBtn && (
+                <button onClick={() => {window.scrollTo(0,0)}} className='upBtn'>
+                <i className="fa-solid fa-arrow-up"></i>
+                </button>
+                )
             }
         </div>
     )

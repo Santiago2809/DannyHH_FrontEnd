@@ -6,6 +6,7 @@ import { addMember, onCloseAddT } from '../../store';
 import { useState } from 'react';
 import { addTeammate } from '../helpers/dbTeamFunctions';
 
+import classes from '../../styles/modalStyles.module.css'
 
 export const AddModalTeam = () => {
 
@@ -56,7 +57,10 @@ export const AddModalTeam = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={ 200 }
             >   
-            <h1 className='p-2'>Add team member</h1>
+            <div className={classes.modalHeader}>
+                <h1 className='p-2'>Add Team member</h1>
+                <span onClick={onCloseModal}>X</span>
+            </div>
             <hr />
             <form className='p-2' onSubmit={ onHandleSubmit }>
                 <div className='mb-3 row'>

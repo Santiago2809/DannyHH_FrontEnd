@@ -9,6 +9,10 @@ body {
   color: #fff
 }
 
+.loginForm {
+  background-color: #fff;
+}
+
 .loginscreen {
   min-height: 100vh;
   display: flex;
@@ -81,10 +85,10 @@ label {
   color: #000 !important;
 }
 
-.linkspicker {
+/* .linkspicker {
   min-width: 180px !important;
   margin-right: 15px !important;
-}
+} */
 
 .optionn {
   color: #595C5F !important;

@@ -1,0 +1,21 @@
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #000;
+}
+.modalHeader span {
+    margin: 0;
+    padding: 0 10px;
+    color: #000;
+    font-size: calc(1.375rem + 1.5vw);
+    font-weight: 700;
+    border: 2px solid #000;
+    border-radius: 50%;
+}
+
+@media (min-width: 650px) {
+    .modalHeader span {
+        display: none;
+    }
+}

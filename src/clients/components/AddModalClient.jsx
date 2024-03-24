@@ -12,6 +12,7 @@ import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { addDBClient } from '../helpers/addDBClient';
 import { days_of_week } from '../../types';
 
+import classes from '../../styles/modalStyles.module.css'
 
 export const AddModalClient = () => {
 
@@ -117,7 +118,10 @@ export const AddModalClient = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={200}
             >
-                <h1 className='p-2'>Add Client</h1>
+                <div className={classes.modalHeader}>
+                    <h1 className='p-2'>Add Customer</h1>
+                    <span onClick={onCloseModal}>X</span>
+                </div>
                 <hr />
                 <form className='p-2' onSubmit={onHandleSubmit} autoComplete='off'>
                     <div className='mb-3 row'>
@@ -170,8 +174,6 @@ export const AddModalClient = () => {
                                 selected={hour}
                                 className='form-control'
                                 onChange={(date) => { setHour(date) }}
-                                minTime={new Date().setHours(8, 0)}
-                                maxTime={new Date().setHours(14, 0)}
                                 showTimeSelect
                                 showTimeSelectOnly
                                 timeIntervals={30}
@@ -230,7 +232,7 @@ export const AddModalClient = () => {
                     </div>
 
                     <div className='d-flex justify-content-end mt-2'>
-                        <button className='btn btn-primary w-50' disabled={disabledButton}>
+                        <button className='btn btn-primary w-50' disabled={disabledButton} style={{margin: '10px 0'}}>
                             Add
                         </button>
                     </div>

@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { fromUnixTime, isSameDay, millisecondsToSeconds } from 'date-fns';
 import { editClient } from '../helpers/editClient';
 
+import classes from '../../styles/modalStyles.module.css'
+
 export const EditModalClient = () => {
 
     const dispatch = useDispatch();
@@ -199,7 +201,10 @@ export const EditModalClient = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={200}
             >
-                <h1>Edit Customer</h1>
+                <div className={classes.modalHeader}>
+                    <h1 className='p-2'>Edit Customer</h1>
+                    <span onClick={onCloseModal}>X</span>
+                </div>
                 <hr />
                 <form autoComplete='off' onSubmit={handleSubmit}>
                     <div className='mb-2'>

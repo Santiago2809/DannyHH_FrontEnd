@@ -6,6 +6,8 @@ import { useForm } from '../../hooks/useForm';
 import { useState } from 'react';
 import { editTeammate } from '../helpers/dbTeamFunctions';
 
+import classes from '../../styles/modalStyles.module.css'
+
 export const EditModalTeam = () => {
 
     const dispatch = useDispatch();
@@ -58,7 +60,10 @@ export const EditModalTeam = () => {
                 overlayClassName="modal-fondo"
                 closeTimeoutMS={ 200 }
             >   
-            <h1>Edit Team member</h1>
+            <div className={classes.modalHeader}>
+                <h1 className='p-2'>Edit Team member</h1>
+                <span onClick={onCloseModal}>X</span>
+            </div>
             <hr />
             <form onSubmit={handleSubmit}>
                 <div className='mb-2 row'>
