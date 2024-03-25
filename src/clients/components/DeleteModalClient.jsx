@@ -6,7 +6,9 @@ import { delClients, onCloseDelC } from '../../store';
 import { customStyles, notifyError, notifySuccess } from '../../helpers';
 import { delDBClient } from '../helpers/delDBClient';
 
-import classes from '../../styles/modalStyles.module.css'
+import classes from '../../styles/modalStyles.module.css';
+import formClasses from './deleteModalStyles.module.css';
+import { useState } from 'react';
 
 export const DeleteModalClient = () => {
 
@@ -14,10 +16,15 @@ export const DeleteModalClient = () => {
     const isOpen = useSelector( state => state.ui.isDelOpenC );
     const customers = useSelector(state => state.clients.clients);
 
+    const [search,setSearch] = useState('');
     const [values, handleInputChange] = useForm({
         id: customers[0].id
     })
 
+    const handleInputSearch = ({target}) => {
+        setSearch(target.value);
+    }
+    
     const onCloseModal = () => {
         dispatch(onCloseDelC());
     }
@@ -50,12 +57,15 @@ export const DeleteModalClient = () => {
                     <span onClick={onCloseModal}>X</span>
                 </div>
             <hr />
-            <div className='mt-3'>
-                <label className='form-label fs-3'>Client to delete:</label>
+            <div className={`mt-3 ${formClasses.deleteCustomerForm}`}>
+                    <label className='form-label fs-3'>Client to delete:</label>
+                <input type="text" placeholder='Customer name to delete' value={search} className={formClasses.searchInput} onChange={handleInputSearch}/>
                 <select className='form-select' onChange={handleInputChange} name='id' value={values.id}>
                     {
                         customers.map( customer => {
-                            return (<option key={customer.id} value={customer.id} style={{color: "#000"}}>{customer.name} - {customer.phone}</option>)
+                            if(customer.name.trim().toLowerCase().includes(search.trim().toLowerCase())){
+                                return (<option key={customer.id} value={customer.id} style={{color: "#000"}}>{customer.name} - {customer.phone}</option>)
+                            }
                         }) 
                     }
                 </select>  

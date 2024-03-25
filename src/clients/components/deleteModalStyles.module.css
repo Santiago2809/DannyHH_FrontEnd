@@ -1,0 +1,20 @@
+.deleteCustomerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.searchInput {
+    padding: 5px 10px;
+    color: #000;
+    border: 1px solid rgb(158, 150, 150);
+    border-radius: 0.375rem;
+    transition: all ease-in 0.3s;
+}
+.searchInput::placeholder {
+    color: #3c3c3c;
+}
+.searchInput:focus {
+    outline-style: solid;
+    outline-width: 2.8px;
+    outline-color: rgba(60, 131, 203, 0.5);
+}
